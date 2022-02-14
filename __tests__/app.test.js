@@ -25,3 +25,19 @@ describe("GET/api/topics", () => {
     expect(body.msg).toBe("Path does not exist");
   });
 });
+
+describe("GET/api/users", () => {
+  test("200 - returns 200 Status", async () => {
+    await request(app).get("/api/users").expect(200);
+  });
+  test("200 - returns array of objects containing username property", async () => {
+    const users = await request(app).get("/api/users").expect(200);
+    users.body.forEach((slug) => {
+      expect(slug).toEqual(
+        expect.objectContaining({
+          username: expect.any(String),
+        })
+      );
+    });
+  });
+});

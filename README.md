@@ -14,3 +14,7 @@
 
 - returns array of objects containg the slug and description
 - returns 404 error if path is incorrect
+
+# GET /api/users
+
+- returns array of objects containing the username property
