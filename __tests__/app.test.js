@@ -38,7 +38,6 @@ describe("GET/api/articles", () => {
   });
   test("200 - returns array of article objects with numerous properties", async () => {
     const articles = await request(app).get("/api/articles").expect(200);
-    console.table(articles.body);
     articles.body.forEach((article) => {
       expect(article).toEqual(
         expect.objectContaining({
