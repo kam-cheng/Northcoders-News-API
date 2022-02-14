@@ -14,3 +14,16 @@
 
 - returns array of objects containg the slug and description
 - returns 404 error if path is incorrect
+
+# GET /api/articles
+
+- returns array of article obtains containing the following properties :
+
+  - author (username from user's table)
+  - title
+  - article_id
+  - topic
+  - created_at
+  - votes
+
+- articles will be sorted by date in descending order.
