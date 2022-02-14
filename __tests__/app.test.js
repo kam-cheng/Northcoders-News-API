@@ -12,8 +12,8 @@ describe("GET/api/topics", () => {
     await request(app).get("/api/topics").expect(200);
   });
   test("200 - returns array of objects with slug and description properties", async () => {
-    const slugs = await request(app).get("/api/topics").expect(200);
-    slugs.body.forEach((slug) => {
+    const { body } = await request(app).get("/api/topics").expect(200);
+    body.topics.forEach((slug) => {
       expect(slug).toEqual(
         expect.objectContaining({
           slug: expect.any(String),
@@ -33,12 +33,12 @@ describe("GET/api/articles", () => {
     await request(app).get("/api/articles").expect(200);
   });
   test("200 - return array of the correct length", async () => {
-    const articles = await request(app).get("/api/articles").expect(200);
-    expect(articles.body).toHaveLength(12);
+    const { body } = await request(app).get("/api/articles").expect(200);
+    expect(body.articles).toHaveLength(12);
   });
   test("200 - returns array of article objects with numerous properties", async () => {
-    const articles = await request(app).get("/api/articles").expect(200);
-    articles.body.forEach((article) => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    body.articles.forEach((article) => {
       expect(article).toEqual(
         expect.objectContaining({
           author: expect.any(String),
@@ -52,7 +52,7 @@ describe("GET/api/articles", () => {
     });
   });
   test("200 - returns articles in date descending order", async () => {
-    const articles = await request(app).get("/api/articles").expect(200);
-    expect(articles.body).toBeSortedBy("created_at", { descending: true });
+    const { body } = await request(app).get("/api/articles").expect(200);
+    expect(body.articles).toBeSortedBy("created_at", { descending: true });
   });
 });
