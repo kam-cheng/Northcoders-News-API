@@ -7,5 +7,5 @@ exports.getTopics = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   const users = await fetchUsers();
-  res.status(200).send(users);
+  res.status(200).send({ users });
 };
