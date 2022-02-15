@@ -7,6 +7,8 @@ const {
   getArticleById,
 } = require("./controllers/app.controllers");
 
+const { customErrors, psqlErrors, serverErrors } = require("./errors");
+
 app.get("/api/topics", getTopics);
 
 app.get("/api/users", getUsers);
@@ -19,28 +21,13 @@ app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Path does not exist" });
 });
 
-//custom errors
-app.use((err, req, res, next) => {
-  if (err.status) res.status(err.status).send({ msg: err.msg });
-  else next(err);
-});
-
-//PSQL errors
-app.use((err, req, res, next) => {
-  if (err.code === "22P02")
-    res.status(400).send({ msg: "Invalid input of article_id" });
-  else next(err);
-});
-
-//Server error
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send("Server Error!");
-});
-
 // only required for live servers
 // app.listen(9000, () => {
 //   console.log("Server listening on port 9000");
 // });
+
+app.use(customErrors);
+app.use(psqlErrors);
+app.all(serverErrors);
 
 module.exports = app;
