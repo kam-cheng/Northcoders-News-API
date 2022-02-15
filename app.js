@@ -1,10 +1,13 @@
 const express = require("express");
 const app = express();
-const { getTopics, getArticles } = require("./controllers/app.controllers");
+const { getTopics, getUsers, getArticles } = require("./controllers/app.controllers");
 
 app.get("/api/topics", getTopics);
 
+app.get("/api/users", getUsers);
+
 app.get("/api/articles", getArticles);
+
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Path does not exist" });
