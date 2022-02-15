@@ -25,7 +25,9 @@ exports.fetchArticles = async (articleId) => {
       msg: `No article found for article_id: ${articleId}`,
     });
   }
+  //returns first item if using getArticleById
   if (articleId) return articles.rows[0];
+  //for all other instances, return rows
   return articles.rows;
 };
 
