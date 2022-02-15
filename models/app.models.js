@@ -27,3 +27,8 @@ exports.fetchArticles = async (articleId) => {
   }
   return articles.rows;
 };
+
+exports.fetchUsers = async () => {
+  const users = await db.query("SELECT username FROM users");
+  return users.rows;
+};

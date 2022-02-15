@@ -1,4 +1,8 @@
-const { fetchTopics, fetchArticles } = require("../models/app.models.js");
+const {
+  fetchTopics,
+  fetchArticles,
+  fetchUsers,
+} = require("../models/app.models.js");
 
 exports.getTopics = async (req, res) => {
   const topics = await fetchTopics();
@@ -18,4 +22,9 @@ exports.getArticleById = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getUsers = async (req, res) => {
+  const users = await fetchUsers();
+  res.status(200).send({ users });
 };

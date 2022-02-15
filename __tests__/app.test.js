@@ -28,6 +28,26 @@ describe("GET/api/topics", () => {
   });
 });
 
+describe("GET/api/users", () => {
+  test("200 - returns 200 Status", async () => {
+    await request(app).get("/api/users").expect(200);
+  });
+  test("200 - returns correct number of users", async () => {
+    const { body } = await request(app).get("/api/users").expect(200);
+    expect(body.users).toHaveLength(4);
+  });
+  test("200 - returns users object containing array of objects with the username property", async () => {
+    const { body } = await request(app).get("/api/users").expect(200);
+    body.users.forEach((user) => {
+      expect(user).toEqual(
+        expect.objectContaining({
+          username: expect.any(String),
+        })
+      );
+    });
+  });
+});
+
 describe("GET/api/articles", () => {
   test("200 - returns 200 Status", async () => {
     await request(app).get("/api/articles").expect(200);
