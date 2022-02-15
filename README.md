@@ -27,3 +27,19 @@
   - votes
 
 - articles will be sorted by date in descending order.
+
+# GET /api/articles/:article_id
+
+- returns article object article with matching article_id.
+- article object will contain the following properties:
+
+  - author (username from user's table)
+  - title
+  - article_id
+  - body
+  - topic
+  - created_at
+  - votes
+
+- 404 error if article_id is valid no article is found
+- 400 error if user input of article_id is invalid

@@ -9,3 +9,13 @@ exports.getArticles = async (req, res) => {
   const articles = await fetchArticles();
   res.status(200).send({ articles });
 };
+
+exports.getArticleById = async (req, res, next) => {
+  try {
+    const { article_id: articleId } = req.params;
+    const article = await fetchArticles(articleId);
+    res.status(200).send({ article: article[0] });
+  } catch (err) {
+    next(err);
+  }
+};
