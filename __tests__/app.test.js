@@ -111,4 +111,29 @@ describe("GET/api/articles", () => {
       expect(msg).toBe("invalid order query specified: oranges");
     });
   });
+  describe("optional query - topic", () => {
+    test("200 - returns 200 Status", async () => {
+      await request(app).get("/api/articles?topic=cats").expect(200);
+    });
+    test("200 - returns correct number of articles based on filter", async () => {
+      const {
+        body: { articles },
+      } = await request(app).get("/api/articles?topic=cats").expect(200);
+      expect(articles).toHaveLength(1);
+    });
+    test("200 - returns correct article(s) based on filter", async () => {
+      const {
+        body: { articles },
+      } = await request(app).get("/api/articles?topic=cats").expect(200);
+      expect(articles[0]).toEqual({
+        article_id: 5,
+        author: "rogersop",
+        created_at: "2020-08-03T13:14:00.000Z",
+        title: "UNCOVERED: catspiracy to bring down democracy",
+        topic: "cats",
+        votes: 0,
+      });
+    });
+    test("404 - error when topic is ");
+  });
 });

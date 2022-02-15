@@ -10,7 +10,13 @@ exports.fetchUsers = async () => {
   return users.rows;
 };
 
-exports.fetchArticles = async (sortBy = "created_at", order = "desc") => {
+exports.fetchArticles = async (
+  sortBy = "created_at",
+  order = "desc",
+  topic
+) => {
+  const queryValues = [];
+  // greenlist for sortBy
   if (
     !["article_id", "author", "created_at", "title", "topic", "votes"].includes(
       sortBy
@@ -20,15 +26,24 @@ exports.fetchArticles = async (sortBy = "created_at", order = "desc") => {
       status: 400,
       msg: `invalid sort by query specified: ${sortBy}`,
     });
+  //greenlist for order
   if (!["asc", "desc"].includes(order))
     return Promise.reject({
       status: 400,
       msg: `invalid order query specified: ${order}`,
     });
+
   let queryString = `SELECT article_id, author, created_at, title, topic, votes 
     FROM articles
-  LEFT JOIN users ON articles.author = users.username
-  ORDER BY ${sortBy} ${order};`;
-  const articles = await db.query(queryString);
+  LEFT JOIN users ON articles.author = users.username`;
+
+  if (topic) {
+    queryValues.push(topic);
+    queryString += ` WHERE topic = $1`;
+  }
+
+  queryString += ` ORDER BY ${sortBy} ${order};`;
+
+  const articles = await db.query(queryString, queryValues);
   return articles.rows;
 };
