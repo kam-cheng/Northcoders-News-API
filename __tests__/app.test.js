@@ -134,6 +134,6 @@ describe("GET/api/articles", () => {
         votes: 0,
       });
     });
-    test("404 - error when topic is ");
+    // test("404 - error when topic is ");
   });
 });
