@@ -28,7 +28,6 @@ describe("GET/api/topics", () => {
   });
 });
 
-
 describe("GET/api/users", () => {
   test("200 - returns 200 Status", async () => {
     await request(app).get("/api/users").expect(200);
@@ -43,32 +42,73 @@ describe("GET/api/users", () => {
       expect(user).toEqual(
         expect.objectContaining({
           username: expect.any(String),
-
-describe("GET/api/articles", () => {
-  test("200 - returns 200 Status", async () => {
-    await request(app).get("/api/articles").expect(200);
-  });
-  test("200 - return array of the correct length", async () => {
-    const { body } = await request(app).get("/api/articles").expect(200);
-    expect(body.articles).toHaveLength(12);
-  });
-  test("200 - returns array of article objects with numerous properties", async () => {
-    const { body } = await request(app).get("/api/articles").expect(200);
-    body.articles.forEach((article) => {
-      expect(article).toEqual(
-        expect.objectContaining({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
         })
       );
     });
   });
-  test("200 - returns articles in date descending order", async () => {
-    const { body } = await request(app).get("/api/articles").expect(200);
-    expect(body.articles).toBeSortedBy("created_at", { descending: true });
+});
+
+describe("GET/api/articles", () => {
+  describe("default - function without queries", () => {
+    test("200 - returns 200 Status", async () => {
+      await request(app).get("/api/articles").expect(200);
+    });
+    test("200 - return array of the correct length", async () => {
+      const { body } = await request(app).get("/api/articles").expect(200);
+      expect(body.articles).toHaveLength(12);
+    });
+    test("200 - returns array of article objects with numerous properties", async () => {
+      const { body } = await request(app).get("/api/articles").expect(200);
+      body.articles.forEach((article) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+    });
+    test("200 - returns articles in date descending order (default)", async () => {
+      const { body } = await request(app).get("/api/articles").expect(200);
+      expect(body.articles).toBeSortedBy("created_at", { descending: true });
+    });
+  });
+  describe("optional query - sort_by ", () => {
+    test("200 - returns 200 Status", async () => {
+      await request(app).get("/api/articles?sort_by=author").expect(200);
+    });
+    test("200 - returns articles in order of valid column in descending order", async () => {
+      const {
+        body: { articles },
+      } = await request(app).get("/api/articles?sort_by=title").expect(200);
+      expect(articles).toBeSortedBy("title", { descending: true });
+    });
+    test("400 - returns error if column specified is not on green list", async () => {
+      const {
+        body: { msg },
+      } = await request(app).get("/api/articles?sort_by=bananas").expect(400);
+      expect(msg).toBe("invalid sort by query specified: bananas");
+    });
+  });
+  describe("optional query - order", () => {
+    test("200 - returns 200 Status", async () => {
+      await request(app).get("/api/articles?order=asc").expect(200);
+    });
+    test("200 - returns articles in created_at ascending order", async () => {
+      const {
+        body: { articles },
+      } = await request(app).get("/api/articles?order=asc").expect(200);
+      expect(articles).toBeSortedBy("created_at");
+    });
+    test("400 - returns error if order specified is not on green list", async () => {
+      const {
+        body: { msg },
+      } = await request(app).get("/api/articles?order=oranges").expect(400);
+      expect(msg).toBe("invalid order query specified: oranges");
+    });
   });
 });

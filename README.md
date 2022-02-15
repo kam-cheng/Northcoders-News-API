@@ -15,7 +15,6 @@
 - returns array of objects containg the slug and description
 - returns 404 error if path is incorrect
 
-
 # GET /api/users
 
 - returns array of objects containing the username property
@@ -33,3 +32,9 @@
 
 - articles will be sorted by date in descending order.
 
+# GET /api/articles? Optional Queries
+
+- accepts the following optional queries:
+  - sort_by : sorts articles by any valid colum (default to date)
+  - order : set to ascending(asc) or descending(desc) (defaults to descending)
+  - topic: filters articles by topic value specified in query
