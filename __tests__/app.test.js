@@ -12,12 +12,14 @@ describe("GET/api/topics", () => {
     await request(app).get("/api/topics").expect(200);
   });
   test("200 - returns array of objects with slug and description properties", async () => {
-    const slugs = await request(app).get("/api/topics").expect(200);
-    slugs.body.forEach((slug) => {
-      expect.objectContaining({
-        slug: expect.any(String),
-        description: expect.any(String),
-      });
+    const { body } = await request(app).get("/api/topics").expect(200);
+    body.topics.forEach((slug) => {
+      expect(slug).toEqual(
+        expect.objectContaining({
+          slug: expect.any(String),
+          description: expect.any(String),
+        })
+      );
     });
   });
   test('404 - returns 404 Status and Message "Path Not Found"', async () => {
@@ -25,6 +27,7 @@ describe("GET/api/topics", () => {
     expect(body.msg).toBe("Path does not exist");
   });
 });
+
 
 describe("GET/api/users", () => {
   test("200 - returns 200 Status", async () => {
@@ -40,8 +43,32 @@ describe("GET/api/users", () => {
       expect(user).toEqual(
         expect.objectContaining({
           username: expect.any(String),
+
+describe("GET/api/articles", () => {
+  test("200 - returns 200 Status", async () => {
+    await request(app).get("/api/articles").expect(200);
+  });
+  test("200 - return array of the correct length", async () => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    expect(body.articles).toHaveLength(12);
+  });
+  test("200 - returns array of article objects with numerous properties", async () => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    body.articles.forEach((article) => {
+      expect(article).toEqual(
+        expect.objectContaining({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
         })
       );
     });
+  });
+  test("200 - returns articles in date descending order", async () => {
+    const { body } = await request(app).get("/api/articles").expect(200);
+    expect(body.articles).toBeSortedBy("created_at", { descending: true });
   });
 });
