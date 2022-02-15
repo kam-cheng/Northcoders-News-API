@@ -25,6 +25,7 @@ exports.fetchArticles = async (articleId) => {
       msg: `No article found for article_id: ${articleId}`,
     });
   }
+  if (articleId) return articles.rows[0];
   return articles.rows;
 };
 
