@@ -113,3 +113,43 @@ describe("GET/api/articles/:article_id", () => {
     expect(msg).toBe("Invalid input of article_id");
   });
 });
+describe("PATCH/api/articles/:article_id", () => {
+  test("202 - returns 202 status", async () => {
+    const votes = { inc_votes: 1 };
+    await request(app).patch("/api/articles/1").send(votes).expect(202);
+  });
+  test("202 - updates vote count when positive value input", async () => {
+    const votes = { inc_votes: 1 };
+    const {
+      body: { updatedVotes },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(202);
+    expect(updatedVotes.votes).toBe(101);
+  });
+  test("202 - updates vote count when negative value input", async () => {
+    const votes = { inc_votes: -10 };
+    const {
+      body: { updatedVotes },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(202);
+    expect(updatedVotes.votes).toBe(90);
+  });
+  test("400 - error returned when invalid vote value used", async () => {
+    const invalidVote = { inc_votes: "banana" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/articles/1")
+      .send(invalidVote)
+      .expect(400);
+    expect(msg).toBe("Invalid input of inc_votes");
+  });
+  test("400 - error when invalid patch request attempted", async () => {
+    const invalidPatch = { badPatch: "badPatch" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/articles/1")
+      .send(invalidPatch)
+      .expect(400);
+    expect(msg).toBe("Invalid input of inc_votes");
+  });
+});

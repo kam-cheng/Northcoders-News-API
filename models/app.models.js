@@ -35,3 +35,10 @@ exports.fetchUsers = async () => {
   const users = await db.query("SELECT username FROM users");
   return users.rows;
 };
+
+exports.updateVotes = async (articleId, votes) => {
+  const updatedVotes = await db.query(`UPDATE articles 
+  SET votes = votes + ${votes} 
+  WHERE article_id = ${articleId} RETURNING *;`);
+  return updatedVotes.rows[0];
+};
