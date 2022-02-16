@@ -29,10 +29,7 @@ describe("GET/api/topics", () => {
 });
 
 describe("GET/api/users", () => {
-  test("200 - returns 200 Status", async () => {
-    await request(app).get("/api/users").expect(200);
-  });
-  test("200 - returns correct number of users", async () => {
+  test("200 - returns 200 Status and the correct number of users", async () => {
     const { body } = await request(app).get("/api/users").expect(200);
     expect(body.users).toHaveLength(4);
   });
@@ -50,10 +47,7 @@ describe("GET/api/users", () => {
 
 describe("GET/api/articles", () => {
   describe("default - function without queries", () => {
-    test("200 - returns 200 Status", async () => {
-      await request(app).get("/api/articles").expect(200);
-    });
-    test("200 - return array of the correct length", async () => {
+    test("200 - return 200 status and array of the correct length", async () => {
       const { body } = await request(app).get("/api/articles").expect(200);
       expect(body.articles).toHaveLength(12);
     });
@@ -177,10 +171,7 @@ describe("GET/api/articles", () => {
   });
 });
 describe("GET/api/articles/:article_id", () => {
-  test("200 - returns 200 Status with valid article_id", async () => {
-    await request(app).get("/api/articles/1").expect(200);
-  });
-  test("200 - returns article object with object.keys length of 1", async () => {
+  test("200 - returns 200 Status and article object with object.keys length of 1", async () => {
     const { body } = await request(app).get("/api/articles/1").expect(200);
     expect(Object.keys(body)).toHaveLength(1);
   });
