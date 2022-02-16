@@ -36,8 +36,12 @@
 
 - accepts the following optional queries:
   - sort_by : sorts articles by any valid colum (default to date)
+    - 400 error if query not in greenlist
   - order : set to ascending(asc) or descending(desc) (defaults to descending)
+    - 400 error if query not in greenlist
   - topic: filters articles by topic value specified in query
+    - returns empty array if topic valid but no related articles found
+    - 404 error if invalid topic is input
 
 # GET /api/articles/:article_id
 
