@@ -121,16 +121,33 @@ describe("PATCH/api/articles/:article_id", () => {
   test("202 - updates vote count when positive value input", async () => {
     const votes = { inc_votes: 1 };
     const {
-      body: { updatedVotes },
+      body: { article },
     } = await request(app).patch("/api/articles/1").send(votes).expect(202);
-    expect(updatedVotes.votes).toBe(101);
+    expect(article.votes).toBe(101);
   });
   test("202 - updates vote count when negative value input", async () => {
     const votes = { inc_votes: -10 };
     const {
-      body: { updatedVotes },
+      body: { article },
     } = await request(app).patch("/api/articles/1").send(votes).expect(202);
-    expect(updatedVotes.votes).toBe(90);
+    expect(article.votes).toBe(90);
+  });
+  test("202 - return article object has correct properties", async () => {
+    const votes = { inc_votes: 1 };
+    const {
+      body: { article },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(202);
+    expect(article).toEqual(
+      expect.objectContaining({
+        author: "butter_bridge",
+        title: "Living in the shadow of a great man",
+        article_id: 1,
+        topic: "mitch",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 101,
+        body: "I find this existence challenging",
+      })
+    );
   });
   test("400 - error returned when invalid vote value used", async () => {
     const invalidVote = { inc_votes: "banana" };

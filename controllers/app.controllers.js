@@ -34,8 +34,8 @@ exports.patchVotes = async (req, res, next) => {
   const { inc_votes: votes } = req.body;
   const { article_id: articleId } = req.params;
   try {
-    const updatedVotes = await updateVotes(articleId, votes);
-    res.status(202).send({ updatedVotes });
+    const article = await updateVotes(articleId, votes);
+    res.status(202).send({ article });
   } catch (err) {
     next(err);
   }
