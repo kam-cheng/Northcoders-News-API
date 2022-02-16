@@ -12,7 +12,8 @@ exports.getTopics = async (req, res) => {
 exports.getArticles = async (req, res, next) => {
   try {
     const { sort_by: sortBy, order, topic } = req.query;
-    const articles = await fetchArticles(sortBy, order, topic);
+    // const articles = await fetchArticles(sortBy, order, topic);
+    const articles = await fetchArticles({ sortBy, order, topic });
     res.status(200).send({ articles });
   } catch (err) {
     next(err);
@@ -22,12 +23,7 @@ exports.getArticles = async (req, res, next) => {
 exports.getArticleById = async (req, res, next) => {
   try {
     const { article_id: articleId } = req.params;
-    const article = await fetchArticles(
-      undefined,
-      undefined,
-      undefined,
-      articleId
-    );
+    const article = await fetchArticles({ articleId });
     res.status(200).send({ article });
   } catch (err) {
     next(err);

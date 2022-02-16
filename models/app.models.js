@@ -11,12 +11,16 @@ exports.fetchUsers = async () => {
   return users.rows;
 };
 
-exports.fetchArticles = async (
-  sortBy = "created_at",
-  order = "desc",
-  topic,
-  articleId
-) => {
+exports.fetchArticles = async (paramObject) => {
+  let sortBy = "created_at";
+  if (paramObject.sortBy !== undefined) sortBy = paramObject.sortBy;
+  let order = "desc";
+  if (paramObject.order !== undefined) order = paramObject.order;
+  let articleId;
+  if (paramObject.articleId !== undefined) articleId = paramObject.articleId;
+  let topic;
+  if (paramObject.topic !== undefined) topic = paramObject.topic;
+
   const queryValues = [];
   // greenlist for sortBy
   if (
