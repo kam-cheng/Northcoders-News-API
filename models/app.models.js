@@ -80,3 +80,13 @@ const checkExists = async (table, column, value) => {
     });
   }
 };
+
+exports.updateVotes = async (articleId, votes) => {
+  const updatedVotes = await db.query(
+    `UPDATE articles 
+  SET votes = votes + $1 
+  WHERE article_id = $2 RETURNING *;`,
+    [votes, articleId]
+  );
+  return updatedVotes.rows[0];
+};

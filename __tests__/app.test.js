@@ -201,6 +201,63 @@ describe("GET/api/articles/:article_id", () => {
     const {
       body: { msg },
     } = await request(app).get("/api/articles/banana").expect(400);
-    expect(msg).toBe("Invalid input of article_id");
+    expect(msg).toBe("Invalid syntax input");
+  });
+});
+describe("PATCH/api/articles/:article_id", () => {
+  test("201 - returns 201 status", async () => {
+    const votes = { inc_votes: 1 };
+    await request(app).patch("/api/articles/1").send(votes).expect(201);
+  });
+  test("201 - updates vote count when positive value input", async () => {
+    const votes = { inc_votes: 1 };
+    const {
+      body: { article },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(201);
+    expect(article.votes).toBe(101);
+  });
+  test("201 - updates vote count when negative value input", async () => {
+    const votes = { inc_votes: -10 };
+    const {
+      body: { article },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(201);
+    expect(article.votes).toBe(90);
+  });
+  test("201 - return article object has correct properties", async () => {
+    const votes = { inc_votes: 1 };
+    const {
+      body: { article },
+    } = await request(app).patch("/api/articles/1").send(votes).expect(201);
+    expect(article).toEqual(
+      expect.objectContaining({
+        author: "butter_bridge",
+        title: "Living in the shadow of a great man",
+        article_id: 1,
+        topic: "mitch",
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 101,
+        body: "I find this existence challenging",
+      })
+    );
+  });
+  test("400 - error returned when invalid vote value used", async () => {
+    const invalidVote = { inc_votes: "banana" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/articles/1")
+      .send(invalidVote)
+      .expect(400);
+    expect(msg).toBe("Invalid syntax input");
+  });
+  test("400 - error when invalid patch request attempted", async () => {
+    const invalidPatch = { badPatch: "badPatch" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .patch("/api/articles/1")
+      .send(invalidPatch)
+      .expect(400);
+    expect(msg).toBe("Invalid input of inc_votes");
   });
 });

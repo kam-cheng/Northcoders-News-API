@@ -58,3 +58,10 @@
 
 - 404 error if article_id is valid no article is found
 - 400 error if user input of article_id is invalid
+
+# PATCH /api/articles/:article_id
+
+- returns article object with matching article_id and the updated vote count
+- request must be input using the following format {inc_votes: votecount}
+- example request - request(app).patch('/api/articles/1').send({inc_votes:20})
+- 400 error if value is not a number, or where object sent is not entitled 'inc_votes'

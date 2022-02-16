@@ -2,6 +2,7 @@ const {
   fetchTopics,
   fetchArticles,
   fetchUsers,
+  updateVotes,
 } = require("../models/app.models.js");
 
 exports.getTopics = async (req, res) => {
@@ -33,4 +34,15 @@ exports.getArticleById = async (req, res, next) => {
 exports.getUsers = async (req, res) => {
   const users = await fetchUsers();
   res.status(200).send({ users });
+};
+
+exports.patchVotes = async (req, res, next) => {
+  const { inc_votes: votes } = req.body;
+  const { article_id: articleId } = req.params;
+  try {
+    const article = await updateVotes(articleId, votes);
+    res.status(201).send({ article });
+  } catch (err) {
+    next(err);
+  }
 };
