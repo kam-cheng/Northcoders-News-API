@@ -4,6 +4,7 @@ const {
   fetchUsers,
   updateVotes,
   fetchArticleIdComments,
+  deleteCommentId,
 } = require("../models/app.models.js");
 
 exports.getTopics = async (req, res) => {
@@ -53,6 +54,16 @@ exports.getArticleIdComments = async (req, res, next) => {
   try {
     const comments = await fetchArticleIdComments(articleId);
     res.status(200).send({ comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  const { comment_id: commentId } = req.params;
+  try {
+    await deleteCommentId(commentId);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }
