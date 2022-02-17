@@ -8,12 +8,14 @@ const {
   patchVotes,
   getArticleIdComments,
   deleteComment,
+  getEndpoints,
 } = require("./controllers/app.controllers");
 
 const { customErrors, psqlErrors, serverErrors } = require("./errors");
 
 app.use(express.json());
 
+app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/users", getUsers);
 app.get("/api/articles", getArticles);

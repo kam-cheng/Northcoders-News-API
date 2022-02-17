@@ -1,5 +1,6 @@
 const db = require("../db/connection.js");
 const format = require("pg-format");
+const fs = require("fs/promises");
 
 exports.fetchTopics = async () => {
   const topics = await db.query("SELECT * FROM topics");
@@ -112,4 +113,9 @@ exports.deleteCommentId = async (commentId) => {
   );
   if (deleteComment.rows.length === 0)
     return Promise.reject({ status: 404, msg: "comment_id does not exist" });
+};
+
+exports.fetchEndpoints = async () => {
+  const endpoint = await fs.readFile("./endpoints.json", "utf-8");
+  return JSON.parse(endpoint);
 };
