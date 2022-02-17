@@ -62,6 +62,7 @@ describe("GET/api/articles", () => {
             topic: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
+            comment_count: expect.any(String),
           })
         );
       });
@@ -126,6 +127,7 @@ describe("GET/api/articles", () => {
         title: "UNCOVERED: catspiracy to bring down democracy",
         topic: "cats",
         votes: 0,
+        comment_count: "2",
       });
     });
     test("200 - return empty array when topic is valid, but where there are no related articles", async () => {
@@ -166,6 +168,7 @@ describe("GET/api/articles", () => {
         title: "A",
         topic: "mitch",
         votes: 0,
+        comment_count: "1",
       });
     });
   });

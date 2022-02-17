@@ -29,6 +29,7 @@
   - topic
   - created_at
   - votes
+  - comment_count (total count of all comments)
 
 - articles will be sorted by date in descending order.
 
