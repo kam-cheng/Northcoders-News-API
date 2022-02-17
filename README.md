@@ -65,3 +65,10 @@
 - request must be input using the following format {inc_votes: votecount}
 - example request - request(app).patch('/api/articles/1').send({inc_votes:20})
 - 400 error if value is not a number, or where object sent is not entitled 'inc_votes'
+
+# POST /api/articles/:article_id/comments
+
+- adds comment to comment table
+- returns posted comment
+- input format required: {username: username, body: body}
+  - example input: request(app).post("/api/articles/1/comments").send({username: "Jim", body: "insert comment here"})

@@ -258,6 +258,40 @@ describe("PATCH/api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(invalidPatch)
       .expect(400);
-    expect(msg).toBe("Invalid input of inc_votes");
+    expect(msg).toBe("Invalid input by user");
+  });
+});
+describe("POST/api/articles/:article_id/comments", () => {
+  test("201 - status message when invoked", async () => {
+    await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "this is a user comment" })
+      .expect(201);
+  });
+  test("201 - returns posted comment", async () => {
+    const {
+      body: { comment },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "this is a user comment" })
+      .expect(201);
+    expect(comment).toEqual({
+      comment_id: 19,
+      body: "this is a user comment",
+      votes: 0,
+      author: "butter_bridge",
+      article_id: 1,
+      created_at: expect.any(String),
+    });
+  });
+  test("400 - error if object posted is invalid format", async () => {
+    const invalidPost = { badpost: "bad post" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send(invalidPost)
+      .expect(400);
+    expect(msg).toBe("Invalid input by user");
   });
 });
