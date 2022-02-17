@@ -52,6 +52,24 @@ To seed the development tables, input the following in your command terminal:
 npm run seed
 ```
 
+## Testing on the Database
+
+---
+
+The test suite uses node packages `jest` and `jest-sorted` to complete its functionality. To run the tests, install the packages using the following commands in your terminal:
+
+```
+npm install jest -D
+npm install jest-sorted -D
+npm install supertest -D
+```
+
+Once installed, input the following commands in your terminal to run the tests:
+
+```
+npm test
+```
+
 ## API Commands
 
 ---
