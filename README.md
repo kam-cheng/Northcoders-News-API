@@ -56,6 +56,10 @@ npm run seed
 
 ---
 
+### GET/api
+
+- responds with JSON describing all available endpoints.
+
 ### GET/api/topics
 
 - returns array of objects containg the slug and description

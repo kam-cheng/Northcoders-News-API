@@ -7,6 +7,13 @@ const connection = require("../db/connection.js");
 beforeEach(() => seed(testData));
 afterAll(() => connection.end());
 
+describe("GET/api", () => {
+  test("200 - returns 200 Status and JSON parsed endpoints", async () => {
+    const { body } = await request(app).get("/api").expect(200);
+    expect(typeof body).toBe("object");
+  });
+});
+
 describe("GET/api/topics", () => {
   test("200 - returns 200 Status", async () => {
     await request(app).get("/api/topics").expect(200);
