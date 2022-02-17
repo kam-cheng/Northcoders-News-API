@@ -71,4 +71,8 @@
 - adds comment to comment table
 - returns posted comment
 - input format required: {username: username, body: body}
+
   - example input: request(app).post("/api/articles/1/comments").send({username: "Jim", body: "insert comment here"})
+
+- 400 error if input object format is invalid
+- 404 error if username is not in database

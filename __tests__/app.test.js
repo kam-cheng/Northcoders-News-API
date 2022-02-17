@@ -294,4 +294,25 @@ describe("POST/api/articles/:article_id/comments", () => {
       .expect(400);
     expect(msg).toBe("Invalid input by user");
   });
+  test("400 - error if object posted is invalid format", async () => {
+    const invalidPost = {
+      badPost: "badPost",
+    };
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send(invalidPost)
+      .expect(400);
+    expect(msg).toBe("Invalid input by user");
+  });
+  test("404 - error if username does not exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "non_user", body: "this is a user comment" })
+      .expect(404);
+    expect(msg).toBe("Username does not exist");
+  });
 });

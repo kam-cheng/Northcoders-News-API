@@ -55,6 +55,7 @@ exports.postComment = async (req, res, next) => {
     const comment = await addComment(articleId, author, body);
     res.status(201).send({ comment });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
