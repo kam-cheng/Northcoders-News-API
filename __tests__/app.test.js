@@ -263,22 +263,22 @@ describe("PATCH/api/articles/:article_id", () => {
 });
 describe("GET/api/articles/:article_id/comments", () => {
   test("200 - returns 200 status and an array", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/1/comments")
-      .expect(200);
-    expect(Array.isArray(body)).toBe(true);
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    expect(Array.isArray(comments)).toBe(true);
   });
   test("200 - returns array of the correct length", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/1/comments")
-      .expect(200);
-    expect(body).toHaveLength(11);
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    expect(comments).toHaveLength(11);
   });
   test("200 - each array object has the correct properties", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/1/comments")
-      .expect(200);
-    body.forEach((comment) => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    comments.forEach((comment) => {
       expect(comment).toEqual(
         expect.objectContaining({
           comment_id: expect.any(Number),
@@ -291,10 +291,10 @@ describe("GET/api/articles/:article_id/comments", () => {
     });
   });
   test("200 - returns empty array if article_id is valid but there are no comments", async () => {
-    const { body } = await request(app)
-      .get("/api/articles/2/comments")
-      .expect(200);
-    expect(body).toHaveLength(0);
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/2/comments").expect(200);
+    expect(comments).toHaveLength(0);
   });
   test("404 - returns error when article_id doesn't exist", async () => {
     const {

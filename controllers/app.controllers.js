@@ -52,7 +52,7 @@ exports.getArticleIdComments = async (req, res, next) => {
   const { article_id: articleId } = req.params;
   try {
     const comments = await fetchArticleIdComments(articleId);
-    res.status(200).send(comments);
+    res.status(200).send({ comments });
   } catch (err) {
     next(err);
   }
