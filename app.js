@@ -7,6 +7,7 @@ const {
   getArticleById,
   patchVotes,
   postComment,
+  getArticleIdComments,
 } = require("./controllers/app.controllers");
 
 const { customErrors, psqlErrors, serverErrors } = require("./errors");
@@ -19,6 +20,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", patchVotes);
 app.post("/api/articles/:article_id/comments", postComment);
+app.get("/api/articles/:article_id/comments", getArticleIdComments);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Path does not exist" });
