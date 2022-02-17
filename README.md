@@ -56,6 +56,7 @@
   - topic
   - created_at
   - votes
+  - comment_count
 
 - 404 error if article_id is valid no article is found
 - 400 error if user input of article_id is invalid
