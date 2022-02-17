@@ -1,25 +1,71 @@
 # Northcoders News API
 
-# How to access the two databases locally
+The Northcoders News API allows for users to access, modify, and post content contained within the Northcoders News Database. Actions users can perform on the database include the following:
 
-- Create the file ".env-development".
-- Inside the file - input "PGDATABASE=nc_news"
+- Access to the following resources:
+  - articles
+  - users
+  - topics
+- Update votes on articles
+- Add comments
+- Delete comments
 
-- Create the file ".env-test"
-- Inside the file - input "PGDATABASE=nc_news-test"
+## Installation Instructions
 
-- In command, input npm run setup-dbs to create both databases
+---
 
-# GET/api/topics
+Clone the Repository by accessing your terminal and inputting the following command:
+
+```
+git clone https://github.com/kam-cheng/be-nc-news.git
+```
+
+Install all dependencies by inputting the following command:
+
+```
+npm install
+```
+
+### Accessing the Development and Test Database
+
+Create the following files in the root directory
+
+Development Database:
+
+- Create the file `env-development`
+- Inside the file - input `PGDATABASE=nc_news`
+
+Test Database:
+
+- Create the file `.env-test`
+- Inside the file - input `PGDATABASE=nc_news-test`
+
+To create the databases, input the following in your command terminal:
+
+```
+npm run setup-dbs
+```
+
+To seed the development tables, input the following in your command terminal:
+
+```
+npm run seed
+```
+
+## API Commands
+
+---
+
+### GET/api/topics
 
 - returns array of objects containg the slug and description
 - returns 404 error if path is incorrect
 
-# GET /api/users
+### GET /api/users
 
 - returns array of objects containing the username property
 
-# GET /api/articles
+### GET /api/articles
 
 - returns array of article obtains containing the following properties :
 
@@ -32,7 +78,7 @@
 
 - articles will be sorted by date in descending order.
 
-# GET /api/articles? Optional Queries
+### GET /api/articles? Optional Queries
 
 - accepts the following optional queries:
   - sort_by : sorts articles by any valid colum (default to date)
@@ -43,7 +89,7 @@
     - returns empty array if topic valid but no related articles found
     - 404 error if invalid topic is input
 
-# GET /api/articles/:article_id
+### GET /api/articles/:article_id
 
 - returns article object article with matching article_id.
 - article object will contain the following properties:
@@ -59,14 +105,14 @@
 - 404 error if article_id is valid no article is found
 - 400 error if user input of article_id is invalid
 
-# PATCH /api/articles/:article_id
+### PATCH /api/articles/:article_id
 
 - returns article object with matching article_id and the updated vote count
 - request must be input using the following format {inc_votes: votecount}
 - example request - request(app).patch('/api/articles/1').send({inc_votes:20})
 - 400 error if value is not a number, or where object sent is not entitled 'inc_votes'
 
-# GET /api/articles/:article_id/comments
+### GET /api/articles/:article_id/comments
 
 - returns array of comments for given article_id
 - each comment contains the following properties:
@@ -81,7 +127,7 @@
 - 404 error if article_id does not exist
 - 400 error if user input of article_id is invalid
 
-# DELETE /api/comments/:comment_id
+### DELETE /api/comments/:comment_id
 
 - deletes comment based on comment_id
 - responds with 204 status and no content
