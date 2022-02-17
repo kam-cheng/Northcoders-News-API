@@ -10,6 +10,10 @@
 
 - In command, input npm run setup-dbs to create both databases
 
+# GET/api
+
+- responds with JSON describing all available endpoints.
+
 # GET/api/topics
 
 - returns array of objects containg the slug and description
