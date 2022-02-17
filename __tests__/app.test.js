@@ -309,3 +309,21 @@ describe("GET/api/articles/:article_id/comments", () => {
     expect(msg).toBe("Invalid syntax input");
   });
 });
+describe("DELETE/api/comments/:comment_id", () => {
+  test("204 - returns 204 status and no return body", async () => {
+    const empty = await request(app).delete("/api/comments/1").expect(204);
+    expect(empty.hasOwnProperty("body")).toEqual(false);
+  });
+  test("404 - returns error when comment_id doesn't exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/999").expect(404);
+    expect(msg).toBe("comment_id does not exist");
+  });
+  test("400 - returns error when user input of comment_id is invalid", async () => {
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/banana").expect(400);
+    expect(msg).toBe("Invalid syntax input");
+  });
+});
