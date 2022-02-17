@@ -76,3 +76,7 @@
   - created_at
   - author (username from users table)
   - body
+
+- 200 returns empty array if article_id is valid but there are no comments
+- 404 error if article_id does not exist
+- 400 error if user input of article_id is invalid
