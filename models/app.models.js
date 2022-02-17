@@ -107,7 +107,7 @@ exports.updateVotes = async (articleId, votes) => {
 
 exports.deleteCommentId = async (commentId) => {
   const deleteComment = await db.query(
-    `DELETE FROM comments WHERE comment_id = $1 RETURNING *`,
+    `DELETE FROM comments WHERE comment_id = $1 RETURNING *;`,
     [commentId]
   );
   if (deleteComment.rows.length === 0)
