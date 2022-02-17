@@ -40,7 +40,7 @@ exports.fetchArticles = async (paramObject) => {
     });
 
   //queryString builder for db.query
-  let queryString = `SELECT article_id, author, created_at, title, topic, votes`;
+  let queryString = `SELECT article_id, users.username AS author, created_at, title, topic, votes`;
   //add body column if articleId exists
   if (articleId) {
     queryValues.push(articleId);
@@ -67,6 +67,20 @@ exports.fetchArticles = async (paramObject) => {
   if (articleId) return articles.rows[0];
   //for all other instances, return rows
   return articles.rows;
+};
+
+exports.fetchArticleIdComments = async (articleId) => {
+  const comments = await db.query(
+    `SELECT comment_id, votes, created_at, users.username AS author, body 
+    FROM comments 
+    JOIN users ON users.username = comments.author 
+    WHERE article_id = $1`,
+    [articleId]
+  );
+  //testing if articleId input matches an article
+  if (comments.rows.length === 0)
+    await checkExists("articles", "article_id", articleId);
+  return comments.rows;
 };
 
 //testing for empty values

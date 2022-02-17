@@ -65,3 +65,18 @@
 - request must be input using the following format {inc_votes: votecount}
 - example request - request(app).patch('/api/articles/1').send({inc_votes:20})
 - 400 error if value is not a number, or where object sent is not entitled 'inc_votes'
+
+# GET /api/articles/:article_id/comments
+
+- returns array of comments for given article_id
+- each comment contains the following properties:
+
+  - comment_id
+  - votes
+  - created_at
+  - author (username from users table)
+  - body
+
+- 200 returns empty array if article_id is valid but there are no comments
+- 404 error if article_id does not exist
+- 400 error if user input of article_id is invalid

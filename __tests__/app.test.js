@@ -261,3 +261,51 @@ describe("PATCH/api/articles/:article_id", () => {
     expect(msg).toBe("Invalid input of inc_votes");
   });
 });
+describe("GET/api/articles/:article_id/comments", () => {
+  test("200 - returns 200 status and an array", async () => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    expect(Array.isArray(comments)).toBe(true);
+  });
+  test("200 - returns array of the correct length", async () => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    expect(comments).toHaveLength(11);
+  });
+  test("200 - each array object has the correct properties", async () => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/1/comments").expect(200);
+    comments.forEach((comment) => {
+      expect(comment).toEqual(
+        expect.objectContaining({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+        })
+      );
+    });
+  });
+  test("200 - returns empty array if article_id is valid but there are no comments", async () => {
+    const {
+      body: { comments },
+    } = await request(app).get("/api/articles/2/comments").expect(200);
+    expect(comments).toHaveLength(0);
+  });
+  test("404 - returns error when article_id doesn't exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/99/comments").expect(404);
+    expect(msg).toBe("user input 99 not found");
+  });
+  test("404 - returns error when article_id is invalid", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/articles/grapes/comments").expect(400);
+    expect(msg).toBe("Invalid syntax input");
+  });
+});
