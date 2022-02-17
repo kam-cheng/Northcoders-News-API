@@ -18,7 +18,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all or matching articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "defaultValues": { "sort_by": "created_at", "order": "desc" },
     "exampleResponse": {
       "articles": [
@@ -28,7 +28,8 @@
           "article_id": 123,
           "topic": "cooking",
           "created_at": 1527695953341,
-          "votes": 123
+          "votes": 123,
+          "comment_count": 2
         }
       ]
     }
@@ -44,7 +45,8 @@
         "topic": "cooking",
         "created_at": 1527695953341,
         "votes": 123,
-        "body": "example body"
+        "body": "example body",
+        "comment_count": 1
       }
     }
   },
@@ -53,13 +55,14 @@
     "queries": [],
     "exampleSendBody": { "inc_votes": 1 },
     "exampleResponse": {
-      "author": "butter_bridge",
-      "title": "Living in the shadow of a great man",
+      "author": "Jim",
+      "title": "Adventures of Jim",
       "article_id": 1,
-      "topic": "mitch",
+      "topic": "fred",
       "created_at": "2020-07-09T20:11:00.000Z",
       "votes": 101,
-      "body": "I find this existence challenging"
+      "body": "great article",
+      "comment_count": 2
     }
   },
   "GET /api/articles/:article_id/comments": {
@@ -80,6 +83,21 @@
   "DELETE /api/comments/:comment_id": {
     "description": "deletes comment matching comment_id",
     "queries": [],
-    "exampleResponse": "undefined"
+    "exampleResponse": {}
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "add comment to database for matching article_id",
+    "queries": [],
+    "exampleSendBody": { "username": "Jim", "body": "user comment" },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 20,
+        "body": "user comment",
+        "votes": 0,
+        "author": "Jim",
+        "article_id": 1,
+        "created_at": "2020-07-09T20:11:00.000Z"
+      }
+    }
   }
 }
