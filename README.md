@@ -102,6 +102,15 @@ responds with a JSON object describing all the available endpoints.
 - returns all usernames inside a users object, with the value being an array of objects including with the following property:
   - username
 
+# GET /api/users/:username
+
+- returns user object containing the following properties:
+  - username
+  - name
+  - avatar_url
+
+# GET /api/articles
+
 ### GET /api/articles
 
 - returns all articles inside an articles object, with the value being an array of objects including with the following properties:

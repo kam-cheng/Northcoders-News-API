@@ -12,6 +12,13 @@ exports.fetchUsers = async () => {
   return users.rows;
 };
 
+exports.fetchUsername = async (username) => {
+  const user = await db.query(`SELECT * FROM users WHERE name = $1`, [
+    username,
+  ]);
+  if (user.rows.length === 0) await checkExists("users", "name", username);
+  return user.rows[0];
+};
 exports.fetchArticles = async (paramObject) => {
   let sortBy = "created_at";
   if (paramObject.sortBy !== undefined) sortBy = paramObject.sortBy;

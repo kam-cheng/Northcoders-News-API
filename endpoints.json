@@ -16,6 +16,17 @@
       "users": [{ "username": "person1" }]
     }
   },
+  "GET /api/users/:username": {
+    "description": "serves one object of matching username",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "person1",
+        "name": "Jim",
+        "avatar_url": "https:www.username.com/Jim.jpg"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of all or matching articles",
     "queries": ["topic", "sort_by", "order"],
