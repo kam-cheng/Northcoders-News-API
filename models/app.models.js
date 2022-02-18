@@ -113,6 +113,16 @@ exports.updateVotes = async (articleId, votes) => {
   return updatedVotes.rows[0];
 };
 
+
+exports.addComment = async (articleId, author, body) => {
+  const comment = await db.query(
+    `INSERT INTO comments (article_id, author, body)
+  VALUES ($1, $2, $3) RETURNING *;`,
+    [articleId, author, body]
+  );
+  return comment.rows[0];
+};
+
 exports.deleteCommentId = async (commentId) => {
   const deleteComment = await db.query(
     `DELETE FROM comments WHERE comment_id = $1 RETURNING *;`,
