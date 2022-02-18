@@ -166,7 +166,6 @@ Accepts the following optional queries which can be used to narrow down or restr
   - created_at
   - votes
   - body
-  - comment_count
 
 - Patch request must be input using the following format:
   - `{inc_votes: votecount}`
