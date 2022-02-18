@@ -223,6 +223,7 @@ describe("GET/api/articles/:article_id", () => {
         created_at: "2020-07-09T20:11:00.000Z",
         votes: 100,
         body: "I find this existence challenging",
+        comment_count: "11",
       })
     );
   });
@@ -293,7 +294,53 @@ describe("PATCH/api/articles/:article_id", () => {
       .patch("/api/articles/1")
       .send(invalidPatch)
       .expect(400);
-    expect(msg).toBe("Invalid input of inc_votes");
+    expect(msg).toBe("Invalid input by user");
+  });
+});
+describe("POST/api/articles/:article_id/comments", () => {
+  test("201 - status message and returns posted comment", async () => {
+    const {
+      body: { comment },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "this is a user comment" })
+      .expect(201);
+    expect(comment).toEqual({
+      comment_id: 19,
+      body: "this is a user comment",
+      votes: 0,
+      author: "butter_bridge",
+      article_id: 1,
+      created_at: expect.any(String),
+    });
+  });
+  test("400 - error if article_id is valid, but object posted is invalid format", async () => {
+    const invalidPost = { badpost: "bad post" };
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send(invalidPost)
+      .expect(400);
+    expect(msg).toBe("Invalid input by user");
+  });
+  test("400 - error if object posted is valid, but article_id in string query is invalid format", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/banana/comments")
+      .send({ username: "butter_bridge", body: "this is a user comment" })
+      .expect(400);
+    expect(msg).toBe("Invalid syntax input");
+  });
+  test("404 - error if username does not exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "non_user", body: "this is a user comment" })
+      .expect(404);
+    expect(msg).toBe("Username does not exist");
   });
 });
 describe("GET/api/articles/:article_id/comments", () => {
@@ -337,7 +384,7 @@ describe("GET/api/articles/:article_id/comments", () => {
     } = await request(app).get("/api/articles/99/comments").expect(404);
     expect(msg).toBe("user input 99 not found");
   });
-  test("404 - returns error when article_id is invalid", async () => {
+  test("400 - returns error when article_id is invalid", async () => {
     const {
       body: { msg },
     } = await request(app).get("/api/articles/grapes/comments").expect(400);

@@ -6,6 +6,7 @@ const {
   getArticles,
   getArticleById,
   patchVotes,
+  postComment,
   getArticleIdComments,
   deleteComment,
   getEndpoints,
@@ -23,6 +24,7 @@ app.get("/api/users/:username", getUsername);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", patchVotes);
+app.post("/api/articles/:article_id/comments", postComment);
 app.get("/api/articles/:article_id/comments", getArticleIdComments);
 app.delete("/api/comments/:comment_id", deleteComment);
 
