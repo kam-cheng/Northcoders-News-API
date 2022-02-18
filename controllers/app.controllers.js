@@ -5,7 +5,14 @@ const {
   updateVotes,
   addComment,
   fetchArticleIdComments,
+  deleteCommentId,
+  fetchEndpoints,
 } = require("../models/app.models.js");
+
+exports.getEndpoints = async (req, res) => {
+  const endpoints = await fetchEndpoints();
+  res.status(200).send({ endpoints });
+};
 
 exports.getTopics = async (req, res) => {
   const topics = await fetchTopics();
@@ -15,7 +22,6 @@ exports.getTopics = async (req, res) => {
 exports.getArticles = async (req, res, next) => {
   try {
     const { sort_by: sortBy, order, topic } = req.query;
-    // const articles = await fetchArticles(sortBy, order, topic);
     const articles = await fetchArticles({ sortBy, order, topic });
     res.status(200).send({ articles });
   } catch (err) {
@@ -64,6 +70,16 @@ exports.getArticleIdComments = async (req, res, next) => {
   try {
     const comments = await fetchArticleIdComments(articleId);
     res.status(200).send({ comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteComment = async (req, res, next) => {
+  const { comment_id: commentId } = req.params;
+  try {
+    await deleteCommentId(commentId);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

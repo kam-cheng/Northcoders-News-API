@@ -10,6 +10,10 @@
 
 - In command, input npm run setup-dbs to create both databases
 
+# GET/api
+
+- responds with JSON describing all available endpoints.
+
 # GET/api/topics
 
 - returns array of objects containg the slug and description
@@ -29,6 +33,7 @@
   - topic
   - created_at
   - votes
+  - comment_count (total count of all comments)
 
 - articles will be sorted by date in descending order.
 
@@ -55,6 +60,7 @@
   - topic
   - created_at
   - votes
+  - comment_count
 
 - 404 error if article_id is valid no article is found
 - 400 error if user input of article_id is invalid
@@ -81,6 +87,7 @@
 - 404 error if article_id does not exist
 - 400 error if user input of article_id is invalid
 
+
 # POST /api/articles/:article_id/comments
 
 - adds comment to comment table
@@ -91,3 +98,11 @@
 
 - 400 error if input object format is invalid
 - 404 error if username is not in database
+
+# DELETE /api/comments/:comment_id
+
+- deletes comment based on comment_id
+- responds with 204 status and no content
+
+- 404 if comment_id does not exist
+- 400 if user input is invalid

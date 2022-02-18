@@ -7,6 +7,13 @@ const connection = require("../db/connection.js");
 beforeEach(() => seed(testData));
 afterAll(() => connection.end());
 
+describe("GET/api", () => {
+  test("200 - returns 200 Status and JSON parsed endpoints", async () => {
+    const { body } = await request(app).get("/api").expect(200);
+    expect(typeof body).toBe("object");
+  });
+});
+
 describe("GET/api/topics", () => {
   test("200 - returns 200 Status", async () => {
     await request(app).get("/api/topics").expect(200);
@@ -62,6 +69,7 @@ describe("GET/api/articles", () => {
             topic: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
+            comment_count: expect.any(String),
           })
         );
       });
@@ -126,6 +134,7 @@ describe("GET/api/articles", () => {
         title: "UNCOVERED: catspiracy to bring down democracy",
         topic: "cats",
         votes: 0,
+        comment_count: "2",
       });
     });
     test("200 - return empty array when topic is valid, but where there are no related articles", async () => {
@@ -166,6 +175,7 @@ describe("GET/api/articles", () => {
         title: "A",
         topic: "mitch",
         votes: 0,
+        comment_count: "1",
       });
     });
   });
@@ -352,6 +362,24 @@ describe("GET/api/articles/:article_id/comments", () => {
     const {
       body: { msg },
     } = await request(app).get("/api/articles/grapes/comments").expect(400);
+    expect(msg).toBe("Invalid syntax input");
+  });
+});
+describe("DELETE/api/comments/:comment_id", () => {
+  test("204 - returns 204 status and no return body", async () => {
+    const empty = await request(app).delete("/api/comments/1").expect(204);
+    expect(empty.hasOwnProperty("body")).toEqual(false);
+  });
+  test("404 - returns error when comment_id doesn't exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/999").expect(404);
+    expect(msg).toBe("comment_id does not exist");
+  });
+  test("400 - returns error when user input of comment_id is invalid", async () => {
+    const {
+      body: { msg },
+    } = await request(app).delete("/api/comments/banana").expect(400);
     expect(msg).toBe("Invalid syntax input");
   });
 });
