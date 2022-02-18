@@ -24,9 +24,15 @@ exports.fetchArticles = async (paramObject) => {
   const queryValues = [];
   // greenlist for sortBy
   if (
-    !["article_id", "author", "created_at", "title", "topic", "votes"].includes(
-      sortBy
-    )
+    ![
+      "article_id",
+      "author",
+      "created_at",
+      "title",
+      "topic",
+      "votes",
+      "comment_count",
+    ].includes(sortBy)
   )
     return Promise.reject({
       status: 400,
