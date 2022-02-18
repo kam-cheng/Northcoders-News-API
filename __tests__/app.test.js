@@ -51,6 +51,31 @@ describe("GET/api/users", () => {
     });
   });
 });
+describe("GET/api/users/:username", () => {
+  test("200 - returns 200 status and object of the correct length", async () => {
+    const { body } = await request(app).get("/api/users/jonny").expect(200);
+    expect(Object.keys(body)).toHaveLength(1);
+  });
+  test("200 - user object has correct properties", async () => {
+    const {
+      body: { user },
+    } = await request(app).get("/api/users/jonny").expect(200);
+    expect(user).toEqual(
+      expect.objectContaining({
+        username: "butter_bridge",
+        name: "jonny",
+        avatar_url:
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+      })
+    );
+  });
+  test("404 - returns error if username does not exist", async () => {
+    const {
+      body: { msg },
+    } = await request(app).get("/api/users/non-user").expect(404);
+    expect(msg).toBe("user input non-user not found");
+  });
+});
 
 describe("GET/api/articles", () => {
   describe("default - function without queries", () => {

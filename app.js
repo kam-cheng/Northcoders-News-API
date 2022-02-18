@@ -9,6 +9,7 @@ const {
   getArticleIdComments,
   deleteComment,
   getEndpoints,
+  getUsername,
 } = require("./controllers/app.controllers");
 
 const { customErrors, psqlErrors, serverErrors } = require("./errors");
@@ -18,6 +19,7 @@ app.use(express.json());
 app.get("/api", getEndpoints);
 app.get("/api/topics", getTopics);
 app.get("/api/users", getUsers);
+app.get("/api/users/:username", getUsername);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.patch("/api/articles/:article_id", patchVotes);

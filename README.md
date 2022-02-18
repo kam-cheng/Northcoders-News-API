@@ -23,6 +23,13 @@
 
 - returns array of objects containing the username property
 
+# GET /api/users/:username
+
+- returns user object containing the following properties:
+  - username
+  - name
+  - avatar_url
+
 # GET /api/articles
 
 - returns array of article obtains containing the following properties :
