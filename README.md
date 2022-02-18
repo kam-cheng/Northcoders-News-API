@@ -44,7 +44,7 @@ Development Database:
 Test Database:
 
 - Create the file `.env-test`
-- Inside the file - input `PGDATABASE=nc_news-test`
+- Inside the file - input `PGDATABASE=nc_news_test`
 
 To create the databases, input the following in your command terminal:
 
@@ -62,7 +62,7 @@ npm run seed
 
 ---
 
-The test suite uses node packages [jest](https://www.npmjs.com/package/jest), [jest-sorted](https://www.npmjs.com/package/jest-sorted) and [supertest](https://www.npmjs.com/package/supertest) to complete its functionality. To run the tests, install the packages first using the following commands in your terminal:
+The test suite uses node packages [jest](https://www.npmjs.com/package/jest), [jest-sorted](https://www.npmjs.com/package/jest-sorted) and [supertest](https://www.npmjs.com/package/supertest) to complete its functionality. To run the tests, you may need to install the packages first using the following commands in your terminal:
 
 ```
 npm install jest -D
