@@ -20,6 +20,10 @@ https://northcoders-news-api.herokuapp.com
 
 ---
 
+### Version Support
+
+Northcoders News API was created using node.js v17.3.0 and postgres v14.1 so please ensure you update to at least these versions, or the app may not function correctly.
+
 Clone the Repository by accessing your terminal and inputting the following command:
 
 ```
