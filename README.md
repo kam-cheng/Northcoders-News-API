@@ -141,7 +141,7 @@ Accepts the following optional queries which can be used to narrow down or restr
 
 ### GET /api/articles/:article_id
 
-- returns the article which matches the article_id. The article object will contain the following properties:
+- returns the article which matches the article_id specified. The article object will contain the following properties:
 
   - author (username from user's table)
   - title
@@ -157,7 +157,17 @@ Accepts the following optional queries which can be used to narrow down or restr
 
 ### PATCH /api/articles/:article_id
 
-- Returns an article object with the matching article_id and the updated vote count.
+- Increases or decreases the votes of the article matching the article_id sepcified. Returns an article object containg the following properties:
+
+  - author
+  - title
+  - article_id
+  - topic
+  - created_at
+  - votes
+  - body
+  - comment_count
+
 - Patch request must be input using the following format:
   - `{inc_votes: votecount}`
 - Example of a valid request:
@@ -177,6 +187,22 @@ Accepts the following optional queries which can be used to narrow down or restr
 - 200 returns an empty array if the article_id is valid but there are no comments.
 - 404 error if the article_id does not exist.
 - 400 error if the user input of article_id is invalid.
+
+### POST /api/articles/:article_id/comments
+
+- Adds a comment matching the article_id specified to the database, and returns the posted comment in an object with the following properties:
+  - comment_id
+  - body
+  - votes
+  - author
+  - article_id
+  - created_at
+- Post request must be input with the following format:
+  - `{username: username, body: body}`
+- example of a valid post:
+  - `request(app).post("/api/articles/1/comments").send({username: "Jim", body: "insert comment here"})`
+- 400 error if input object format is invalid
+- 404 error if username is not in database
 
 ### DELETE /api/comments/:comment_id
 

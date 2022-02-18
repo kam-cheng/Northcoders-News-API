@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchUsers,
   updateVotes,
+  addComment,
   fetchArticleIdComments,
   deleteCommentId,
   fetchEndpoints,
@@ -21,7 +22,6 @@ exports.getTopics = async (req, res) => {
 exports.getArticles = async (req, res, next) => {
   try {
     const { sort_by: sortBy, order, topic } = req.query;
-    // const articles = await fetchArticles(sortBy, order, topic);
     const articles = await fetchArticles({ sortBy, order, topic });
     res.status(200).send({ articles });
   } catch (err) {
@@ -55,6 +55,16 @@ exports.patchVotes = async (req, res, next) => {
   }
 };
 
+exports.postComment = async (req, res, next) => {
+  const { username: author, body } = req.body;
+  const { article_id: articleId } = req.params;
+  try {
+    const comment = await addComment(articleId, author, body);
+    res.status(201).send({ comment });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.getArticleIdComments = async (req, res, next) => {
   const { article_id: articleId } = req.params;
   try {

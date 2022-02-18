@@ -25,9 +25,15 @@ exports.fetchArticles = async (paramObject) => {
   const queryValues = [];
   // greenlist for sortBy
   if (
-    !["article_id", "author", "created_at", "title", "topic", "votes"].includes(
-      sortBy
-    )
+    ![
+      "article_id",
+      "author",
+      "created_at",
+      "title",
+      "topic",
+      "votes",
+      "comment_count",
+    ].includes(sortBy)
   )
     return Promise.reject({
       status: 400,
@@ -41,20 +47,21 @@ exports.fetchArticles = async (paramObject) => {
     });
 
   //queryString builder for db.query
-  let queryString = `SELECT article_id, users.username AS author, created_at, title, topic, votes`;
+  let queryString = `SELECT articles.article_id, users.username AS author, articles.created_at, title, topic, articles.votes, COUNT(comments.article_id) AS comment_count`;
   //add body column if articleId exists
   if (articleId) {
     queryValues.push(articleId);
-    queryString += `, body`;
+    queryString += `, articles.body`;
   }
   queryString += ` FROM articles 
-  LEFT JOIN users ON articles.author = users.username`;
-  if (articleId) queryString += ` WHERE article_id = $1`;
+  LEFT JOIN users ON articles.author = users.username 
+  LEFT JOIN comments ON comments.article_id = articles.article_id`;
+  if (articleId) queryString += ` WHERE articles.article_id = $1`;
   if (topic) {
     queryValues.push(topic);
     queryString += ` WHERE topic = $1`;
   }
-  queryString += ` ORDER BY ${sortBy} ${order};`;
+  queryString += ` GROUP BY articles.article_id, users.username ORDER BY ${sortBy} ${order};`;
 
   const articles = await db.query(queryString, queryValues);
 
@@ -104,6 +111,16 @@ exports.updateVotes = async (articleId, votes) => {
     [votes, articleId]
   );
   return updatedVotes.rows[0];
+};
+
+
+exports.addComment = async (articleId, author, body) => {
+  const comment = await db.query(
+    `INSERT INTO comments (article_id, author, body)
+  VALUES ($1, $2, $3) RETURNING *;`,
+    [articleId, author, body]
+  );
+  return comment.rows[0];
 };
 
 exports.deleteCommentId = async (commentId) => {
