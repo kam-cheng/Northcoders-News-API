@@ -14,9 +14,7 @@ The Northcoders News API allows for users to access, modify, and post content co
 
 ---
 
-```
-placeholder for hosted version
-```
+https://northcoders-news-api.herokuapp.com
 
 ## Installation Instructions
 
