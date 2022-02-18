@@ -20,6 +20,16 @@
     "description": "serves an array of all or matching articles",
     "queries": ["topic", "sort_by", "order"],
     "defaultValues": { "sort_by": "created_at", "order": "desc" },
+    "sort_byGreenList": [
+      "author",
+      "title",
+      "article_id",
+      "topic",
+      "created_at",
+      "votes",
+      "comment_count"
+    ],
+    "orderGreenList": ["asc", "desc"],
     "exampleResponse": {
       "articles": [
         {
@@ -61,8 +71,7 @@
       "topic": "fred",
       "created_at": "2020-07-09T20:11:00.000Z",
       "votes": 101,
-      "body": "great article",
-      "comment_count": 2
+      "body": "great article"
     }
   },
   "GET /api/articles/:article_id/comments": {
