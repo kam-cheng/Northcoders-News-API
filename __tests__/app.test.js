@@ -262,13 +262,7 @@ describe("PATCH/api/articles/:article_id", () => {
   });
 });
 describe("POST/api/articles/:article_id/comments", () => {
-  test("201 - status message when invoked", async () => {
-    await request(app)
-      .post("/api/articles/1/comments")
-      .send({ username: "butter_bridge", body: "this is a user comment" })
-      .expect(201);
-  });
-  test("201 - returns posted comment", async () => {
+  test("201 - status message and returns posted comment", async () => {
     const {
       body: { comment },
     } = await request(app)
@@ -284,7 +278,7 @@ describe("POST/api/articles/:article_id/comments", () => {
       created_at: expect.any(String),
     });
   });
-  test("400 - error if object posted is invalid format", async () => {
+  test("400 - error if article_id is valid, but object posted is invalid format", async () => {
     const invalidPost = { badpost: "bad post" };
     const {
       body: { msg },
@@ -294,17 +288,14 @@ describe("POST/api/articles/:article_id/comments", () => {
       .expect(400);
     expect(msg).toBe("Invalid input by user");
   });
-  test("400 - error if object posted is invalid format", async () => {
-    const invalidPost = {
-      badPost: "badPost",
-    };
+  test("400 - error if object posted is valid, but article_id in string query is invalid format", async () => {
     const {
       body: { msg },
     } = await request(app)
-      .post("/api/articles/1/comments")
-      .send(invalidPost)
+      .post("/api/articles/banana/comments")
+      .send({ username: "butter_bridge", body: "this is a user comment" })
       .expect(400);
-    expect(msg).toBe("Invalid input by user");
+    expect(msg).toBe("Invalid syntax input");
   });
   test("404 - error if username does not exist", async () => {
     const {
@@ -357,7 +348,7 @@ describe("GET/api/articles/:article_id/comments", () => {
     } = await request(app).get("/api/articles/99/comments").expect(404);
     expect(msg).toBe("user input 99 not found");
   });
-  test("404 - returns error when article_id is invalid", async () => {
+  test("400 - returns error when article_id is invalid", async () => {
     const {
       body: { msg },
     } = await request(app).get("/api/articles/grapes/comments").expect(400);
