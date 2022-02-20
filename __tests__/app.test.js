@@ -205,6 +205,76 @@ describe("GET/api/articles", () => {
     });
   });
 });
+describe("POST/api/articles", () => {
+  test("201 - status response and return object of length 1", async () => {
+    const articlePosted = {
+      author: "lurker",
+      title: "test article",
+      body: "this is the body of the test article",
+      topic: "paper",
+    };
+    const { body } = await request(app)
+      .post("/api/articles")
+      .send(articlePosted)
+      .expect(201);
+    expect(Object.keys(body)).toHaveLength(1);
+  });
+  test("201 - returns object with correct properties", async () => {
+    const articlePosted = {
+      author: "lurker",
+      title: "test article",
+      body: "this is the body of the test article",
+      topic: "paper",
+    };
+    const {
+      body: { article },
+    } = await request(app)
+      .post("/api/articles")
+      .send(articlePosted)
+      .expect(201);
+    expect(article).toEqual({
+      author: "lurker",
+      title: "test article",
+      body: "this is the body of the test article",
+      topic: "paper",
+      article_id: 13,
+      votes: 0,
+      created_at: expect.any(String),
+      comment_count: "0",
+    });
+  });
+  test("400 - error if sent object is invalid", async () => {
+    const badPost = { badpost: "bad post" };
+    const {
+      body: { msg },
+    } = await request(app).post("/api/articles").send(badPost).expect(400);
+    expect(msg).toBe("Invalid input by user");
+  });
+  test("404 - error if author in sent object is not found", async () => {
+    const nonUser = {
+      author: "non_user",
+      title: "test article",
+      body: "this is the body of the test article",
+      topic: "paper",
+    };
+    const {
+      body: { msg },
+    } = await request(app).post("/api/articles").send(nonUser).expect(404);
+    expect(msg).toBe("User input of value does not exist");
+  });
+  test("404 - error if topic in sent object is not found", async () => {
+    const nonTopic = {
+      author: "lurker",
+      title: "test article",
+      body: "this is the body of the test article",
+      topic: "non_topic",
+    };
+    const {
+      body: { msg },
+    } = await request(app).post("/api/articles").send(nonTopic).expect(404);
+    expect(msg).toBe("User input of value does not exist");
+  });
+});
 describe("GET/api/articles/:article_id", () => {
   test("200 - returns 200 Status and article object with object.keys length of 1", async () => {
     const { body } = await request(app).get("/api/articles/1").expect(200);
@@ -340,7 +410,7 @@ describe("POST/api/articles/:article_id/comments", () => {
       .post("/api/articles/1/comments")
       .send({ username: "non_user", body: "this is a user comment" })
       .expect(404);
-    expect(msg).toBe("Username does not exist");
+    expect(msg).toBe("User input of value does not exist");
   });
 });
 describe("GET/api/articles/:article_id/comments", () => {
