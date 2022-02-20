@@ -109,8 +109,6 @@ responds with a JSON object describing all the available endpoints.
   - name
   - avatar_url
 
-# GET /api/articles
-
 ### GET /api/articles
 
 - returns all articles inside an articles object, with the value being an array of objects including with the following properties:
@@ -149,6 +147,27 @@ Accepts the following optional queries which can be used to narrow down or restr
   - 404 error if user inputs an invalid topic.
 
 **queries can be chained by including `&` in the search string.**
+
+### POST /api/articles
+
+- Adds article to database, and returns an article object containing an object with the following properties:
+
+  - author
+  - title
+  - article_id
+  - topic
+  - body
+  - created_at
+  - votes
+  - comment_count
+
+- Post request must be input in the following format:
+  - `{author: "username", title :"title", body: "body", topic: "topic"}`
+- Example of a valid post:
+  - `request(app).post("/api/articles").send({author: "Jim", title :"Title of Article", body: "Body of article", topic: "topic of article"})`
+- 400 error if input object format is invalid
+- 404 error if username is not in database
+- 404 error if topic is not in database
 
 ### GET /api/articles/:article_id
 
