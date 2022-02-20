@@ -66,6 +66,19 @@ exports.fetchArticles = async (paramObject) => {
   return articles.rows;
 };
 
+exports.createArticle = async (author, title, body, topic) => {
+  const article = await db.query(
+    `INSERT INTO articles 
+    (author, title, body, topic) 
+    VALUES 
+    ($1, $2, $3, $4)
+    RETURNING article_id`,
+    [author, title, body, topic]
+  );
+  //runs fetchArticles function with articleId to include comment_count
+  return this.fetchArticles({ articleId: article.rows[0].article_id });
+};
+
 exports.updateVotes = async (articleId, votes) => {
   const updatedVotes = await db.query(
     `UPDATE articles 
