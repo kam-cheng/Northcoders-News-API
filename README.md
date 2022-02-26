@@ -42,12 +42,12 @@ Create the following files in the root directory:
 
 Development Database:
 
-- Create the file `env-development`
+- Create the file `.env.development`
 - Inside the file - input `PGDATABASE=nc_news`
 
 Test Database:
 
-- Create the file `.env-test`
+- Create the file `.env.test`
 - Inside the file - input `PGDATABASE=nc_news_test`
 
 To create the databases, input the following in your command terminal:
