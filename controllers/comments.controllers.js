@@ -40,7 +40,6 @@ exports.updateCommentVotes = async (req, res, next) => {
     const comment = await updateCommentIdVotes(commentId, votes);
     res.status(201).send({ comment });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
