@@ -187,7 +187,7 @@ Accepts the following optional queries which can be used to narrow down or restr
 
 ### PATCH /api/articles/:article_id
 
-- Increases or decreases the votes of the article matching the article_id sepcified. Returns an article object containg the following properties:
+- Increases or decreases the votes of the article matching the article_id sepcified. Returns an article object containing the following properties:
 
   - author
   - title
@@ -238,3 +238,20 @@ Accepts the following optional queries which can be used to narrow down or restr
 - Deletes the comment matching the comment_id specified. Responds with a 204 status and no content.
 - 404 error if the comment_id does not exist.
 - 400 error if the user input is invalid.
+
+### PATCH /api/comments/:comment_id
+
+- Increases or decreases the votes of the article matching the comment_id sepcified. Returns a comment object containing the following properties:
+
+  - comment_id
+  - body
+  - votes
+  - author
+  - article_id
+  - created_at
+
+- Patch request must be input using the following format:
+  - `{inc_votes: votecount}`
+- Example of a valid request:
+  - `request(app).patch('/api/comments/1').send({inc_votes:20})`
+- 400 error if the user input is not a number, or where the object sent is not entitled `inc_votes`.
