@@ -81,19 +81,19 @@ exports.createArticle = async (author, title, body, topic) => {
 
 exports.deleteArticleId = async (articleId) => {
   //delete comments linked to articles first
-  const deleteComments = await db.query(
+  await db.query(
     `DELETE FROM comments 
   WHERE article_id = $1 RETURNING *;`,
     [articleId]
   );
-  if (deleteComments.rows.length === 0)
-    return Promise.reject({ status: 404, msg: "article_id does not exist" });
   //delete articles
-  await db.query(
+  const deletedArticle = await db.query(
     `DELETE FROM articles 
-  WHERE article_id = $1 RETURNING *;`,
+    WHERE article_id = $1 RETURNING *;`,
     [articleId]
   );
+  if (deletedArticle.rows.length === 0)
+    return Promise.reject({ status: 404, msg: "article_id does not exist" });
 };
 
 exports.updateVotes = async (articleId, votes) => {
