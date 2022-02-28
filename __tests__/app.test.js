@@ -13,26 +13,64 @@ describe("GET/api", () => {
     expect(typeof body).toBe("object");
   });
 });
-describe("GET/api/topics", () => {
-  test("200 - returns 200 Status", async () => {
-    await request(app).get("/api/topics").expect(200);
-  });
-  test("200 - returns array of objects with slug and description properties", async () => {
-    const { body } = await request(app).get("/api/topics").expect(200);
-    body.topics.forEach((slug) => {
-      expect(slug).toEqual(
-        expect.objectContaining({
-          slug: expect.any(String),
-          description: expect.any(String),
-        })
-      );
+describe("/topics", () => {
+  describe("GET/api/topics", () => {
+    test("200 - returns 200 Status", async () => {
+      await request(app).get("/api/topics").expect(200);
+    });
+    test("200 - returns array of objects with slug and description properties", async () => {
+      const { body } = await request(app).get("/api/topics").expect(200);
+      body.topics.forEach((slug) => {
+        expect(slug).toEqual(
+          expect.objectContaining({
+            slug: expect.any(String),
+            description: expect.any(String),
+          })
+        );
+      });
+    });
+    test('404 - returns 404 Status and Message "Path Not Found"', async () => {
+      const { body } = await request(app).get("/bad-path").expect(404);
+      expect(body.msg).toBe("Path does not exist");
     });
   });
-  test('404 - returns 404 Status and Message "Path Not Found"', async () => {
-    const { body } = await request(app).get("/bad-path").expect(404);
-    expect(body.msg).toBe("Path does not exist");
+  describe("POST/api/topics", () => {
+    test("201 - status response and return object of length one", async () => {
+      const newTopic = {
+        slug: "new topic",
+        description: "new topic description",
+      };
+      const { body } = await request(app)
+        .post("/api/topics")
+        .send(newTopic)
+        .expect(201);
+      expect(Object.keys(body)).toHaveLength(1);
+    });
+    test("201 - returns with posted topic", async () => {
+      const newTopic = {
+        slug: "new topic",
+        description: "new topic description",
+      };
+      const {
+        body: { topic },
+      } = await request(app).post("/api/topics").send(newTopic).expect(201);
+      expect(topic).toEqual({
+        slug: "new topic",
+        description: "new topic description",
+      });
+    });
+    test("400 - error if object sent is invalid", async () => {
+      const badTopic = {
+        badtopic: "this is a bad topic",
+      };
+      const {
+        body: { msg },
+      } = await request(app).post("/api/topics").send(badTopic).expect(400);
+      expect(msg).toBe("Invalid input by user");
+    });
   });
 });
+
 describe("/users", () => {
   describe("GET/api/users", () => {
     test("200 - returns 200 Status and the correct number of users", async () => {
