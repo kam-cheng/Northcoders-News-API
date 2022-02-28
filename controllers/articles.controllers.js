@@ -2,6 +2,7 @@ const {
   fetchArticles,
   updateVotes,
   createArticle,
+  deleteArticleId,
 } = require("../models/articles.models");
 
 exports.getArticles = async (req, res, next) => {
@@ -19,6 +20,16 @@ exports.postArticle = async (req, res, next) => {
   try {
     const article = await createArticle(author, title, body, topic);
     res.status(201).send({ article });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteArticle = async (req, res, next) => {
+  const { article_id: articleId } = req.params;
+  try {
+    await deleteArticleId(articleId);
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

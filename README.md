@@ -216,6 +216,12 @@ Accepts the following optional queries which can be used to narrow down or restr
   - `request(app).patch('/api/articles/1').send({inc_votes:20})`
 - 400 error if the user input is not a number, or where the object sent is not entitled `inc_votes`.
 
+### DELETE /api/articles/:article_id
+
+- Deletes the article and all related comments matching the article_id specified. Responds with a 204 status and no content.
+- 404 error if the article_id does not exist.
+- 400 error if the user input is invalid.
+
 ### GET /api/articles/:article_id/comments
 
 - Returns all comments matching the article_id inside of a comments object, with the value being an array of objects containing the following properties:

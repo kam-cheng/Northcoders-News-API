@@ -79,6 +79,23 @@ exports.createArticle = async (author, title, body, topic) => {
   return this.fetchArticles({ articleId: article.rows[0].article_id });
 };
 
+exports.deleteArticleId = async (articleId) => {
+  //delete comments linked to articles first
+  await db.query(
+    `DELETE FROM comments 
+  WHERE article_id = $1 RETURNING *;`,
+    [articleId]
+  );
+  //delete articles
+  const deletedArticle = await db.query(
+    `DELETE FROM articles 
+    WHERE article_id = $1 RETURNING *;`,
+    [articleId]
+  );
+  if (deletedArticle.rows.length === 0)
+    return Promise.reject({ status: 404, msg: "article_id does not exist" });
+};
+
 exports.updateVotes = async (articleId, votes) => {
   const updatedVotes = await db.query(
     `UPDATE articles 
