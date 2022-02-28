@@ -407,6 +407,24 @@ describe("/articles", () => {
       expect(msg).toBe("Invalid input by user");
     });
   });
+  describe("DELETE/api/articles/:article_id", () => {
+    test("204 - returns 204 status and no return body", async () => {
+      const deleted = await request(app).delete("/api/articles/1").expect(204);
+      expect(deleted.hasOwnProperty("body")).toEqual(false);
+    });
+    test("404 - returns error when article_id doesn't exist", async () => {
+      const {
+        body: { msg },
+      } = await request(app).delete("/api/articles/999").expect(404);
+      expect(msg).toBe("article_id does not exist");
+    });
+    test("400 - returns error when article_id is in invalid format", async () => {
+      const {
+        body: { msg },
+      } = await request(app).delete("/api/articles/badrequest").expect(400);
+      expect(msg).toBe("Invalid syntax input");
+    });
+  });
   describe("POST/api/articles/:article_id/comments", () => {
     test("201 - status message and returns posted comment", async () => {
       const {
