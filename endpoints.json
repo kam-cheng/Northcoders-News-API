@@ -9,6 +9,20 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "adds topic to database and serves the topic",
+    "queries": [],
+    "exampleSendBody": {
+      "slug": "Jim",
+      "description": "Not David"
+    },
+    "exampleResponse": {
+      "topic": {
+        "slug": "Jim",
+        "description": "Not David"
+      }
+    }
+  },
   "GET /api/users": {
     "description": "serves an array of all users",
     "queries": [],
