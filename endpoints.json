@@ -122,6 +122,11 @@
       "body": "great article"
     }
   },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes article and all comments matching article_id",
+    "queries": [],
+    "exampleResponse": {}
+  },
   "GET /api/articles/:article_id/comments": {
     "description": "serves an array of all comments matching article_id",
     "queries": [],
