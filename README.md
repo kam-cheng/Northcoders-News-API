@@ -97,6 +97,19 @@ responds with a JSON object describing all the available endpoints.
   - description
 - returns a 404 error if the user input path is incorrect.
 
+### POST/api/topics
+
+- Adds topic to database, and returns a topic object containing an object with the following properties:
+
+  - slug
+  - description
+
+- Post request must be input in the following format:
+  - `{slug: "name", description :"description"}`
+- Example of a valid post:
+  - `request(app).post("/api/topics").send({slug: "Jim", description :"Not David"})`
+- 400 error if input object format is invalid
+
 ### GET /api/users
 
 - returns all usernames inside a users object, with the value being an array of objects including with the following property:
