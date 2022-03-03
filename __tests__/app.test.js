@@ -262,7 +262,7 @@ describe("/articles", () => {
         } = await request(app).get("/api/articles?limit=5").expect(200);
         expect(articles).toHaveLength(5);
       });
-      test("200 - page can also be set ", async () => {
+      test("200 - page can also be set", async () => {
         const {
           body: { articles },
         } = await request(app).get("/api/articles?limit=10&p=2").expect(200);
@@ -287,6 +287,20 @@ describe("/articles", () => {
           },
         ]);
       });
+      // test("200 - total_count property ignores list limit", async () => {
+      //   const {
+      //     body: { articles },
+      //   } = await request(app).get("/api/articles?limit=10&p=2").expect(200);
+      //   expect(articles[0].total_count).toBe("12");
+      // });
+      // test("200 - total_count property correctly calculates filtered articles", async () => {
+      //   const {
+      //     body: { articles },
+      //   } = await request(app)
+      //     .get("/api/articles?limit=10&p=2&topic=mitch")
+      //     .expect(200);
+      //   expect(articles[0].total_count).toBe("11");
+      // });
       test("400 - error when user input of limit is invalid", async () => {
         const {
           body: { msg },

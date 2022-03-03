@@ -39,6 +39,9 @@ exports.fetchArticles = async (paramObject) => {
 
   //queryString builder for db.query
   let queryString = `SELECT articles.article_id, users.username AS author, articles.created_at, title, topic, articles.votes, COUNT(comments.article_id) AS comment_count`;
+
+  //potential total count functionality
+  // , (SELECT COUNT(*) FROM articles) AS total_count`;
   //add body column if articleId exists
   if (articleId) {
     queryValues.push(articleId);
