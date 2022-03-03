@@ -6,12 +6,14 @@ exports.fetchArticles = async (paramObject) => {
   if (paramObject.sortBy !== undefined) sortBy = paramObject.sortBy;
   let order = "desc";
   if (paramObject.order !== undefined) order = paramObject.order;
-  let articleId;
-  if (paramObject.articleId !== undefined) articleId = paramObject.articleId;
-  let topic;
-  if (paramObject.topic !== undefined) topic = paramObject.topic;
+  let limit = 10;
+  if (paramObject.limit !== undefined) limit = paramObject.limit;
+  let p = 0;
+  if (paramObject.p !== undefined) p = (paramObject.p - 1) * limit;
+  const articleId = paramObject.articleId;
+  const topic = paramObject.topic;
 
-  const queryValues = [];
+  const queryValues = [limit, p];
   // greenlist for sortBy
   if (
     ![
@@ -45,12 +47,14 @@ exports.fetchArticles = async (paramObject) => {
   queryString += ` FROM articles 
     LEFT JOIN users ON articles.author = users.username 
     LEFT JOIN comments ON comments.article_id = articles.article_id`;
-  if (articleId) queryString += ` WHERE articles.article_id = $1`;
+  if (articleId) queryString += ` WHERE articles.article_id = $3`;
   if (topic) {
     queryValues.push(topic);
-    queryString += ` WHERE topic = $1`;
+    queryString += ` WHERE topic = $3`;
   }
-  queryString += ` GROUP BY articles.article_id, users.username ORDER BY ${sortBy} ${order};`;
+  queryString += ` GROUP BY articles.article_id, users.username 
+  ORDER BY ${sortBy} ${order} 
+  LIMIT $1 OFFSET $2;`;
 
   const articles = await db.query(queryString, queryValues);
 

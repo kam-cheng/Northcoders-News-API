@@ -118,7 +118,9 @@ describe("/articles", () => {
   describe("GET/api/articles", () => {
     describe("default - function without queries", () => {
       test("200 - return 200 status and array of the correct length", async () => {
-        const { body } = await request(app).get("/api/articles").expect(200);
+        const { body } = await request(app)
+          .get("/api/articles?limit=100")
+          .expect(200);
         expect(body.articles).toHaveLength(12);
       });
       test("200 - returns array of article objects with numerous properties", async () => {
@@ -223,7 +225,7 @@ describe("/articles", () => {
         const {
           body: { articles },
         } = await request(app)
-          .get("/api/articles?topic=mitch&sort_by=title&order=asc")
+          .get("/api/articles?topic=mitch&sort_by=title&order=asc&limit=100")
           .expect(200);
         expect(articles).toHaveLength(11);
       });
@@ -242,6 +244,64 @@ describe("/articles", () => {
           votes: 0,
           comment_count: "1",
         });
+      });
+    });
+    describe("optional query - paginated queries", () => {
+      test("200 - returns 200 Status", async () => {
+        await request(app).get("/api/articles?limit=3&p=1").expect(200);
+      });
+      test("200 - default limit of 10 articles returned", async () => {
+        const {
+          body: { articles },
+        } = await request(app).get("/api/articles").expect(200);
+        expect(articles).toHaveLength(10);
+      });
+      test("200 - limit of articles can be changed", async () => {
+        const {
+          body: { articles },
+        } = await request(app).get("/api/articles?limit=5").expect(200);
+        expect(articles).toHaveLength(5);
+      });
+      test("200 - page can also be set ", async () => {
+        const {
+          body: { articles },
+        } = await request(app).get("/api/articles?limit=10&p=2").expect(200);
+        expect(articles).toEqual([
+          {
+            article_id: 11,
+            author: "icellusedkars",
+            created_at: "2020-01-15T22:21:00.000Z",
+            title: "Am I a cat?",
+            topic: "mitch",
+            votes: 0,
+            comment_count: "0",
+          },
+          {
+            article_id: 7,
+            author: "icellusedkars",
+            created_at: "2020-01-07T14:08:00.000Z",
+            title: "Z",
+            topic: "mitch",
+            votes: 0,
+            comment_count: "0",
+          },
+        ]);
+      });
+      test("400 - error when user input of limit is invalid", async () => {
+        const {
+          body: { msg },
+        } = await request(app)
+          .get("/api/articles?limit=badrequest")
+          .expect(400);
+        expect(msg).toBe("Invalid syntax input");
+      });
+      test("400 - error when user input of page is invalid", async () => {
+        const {
+          body: { msg },
+        } = await request(app)
+          .get("/api/articles?limit=10&p=badrequest")
+          .expect(400);
+        expect(msg).toBe("Invalid syntax input");
       });
     });
   });
