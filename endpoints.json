@@ -43,8 +43,13 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all or matching articles",
-    "queries": ["topic", "sort_by", "order"],
-    "defaultValues": { "sort_by": "created_at", "order": "desc" },
+    "queries": ["topic", "sort_by", "order", "limit", "p"],
+    "defaultValues": {
+      "sort_by": "created_at",
+      "order": "desc",
+      "limit": 10,
+      "p": 1
+    },
     "sort_byGreenList": [
       "author",
       "title",
@@ -66,7 +71,8 @@
           "votes": 123,
           "comment_count": 2
         }
-      ]
+      ],
+      "total_count": 12
     }
   },
   "POST /api/articles": {

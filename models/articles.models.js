@@ -6,10 +6,9 @@ exports.fetchArticles = async (paramObject) => {
   if (paramObject.sortBy !== undefined) sortBy = paramObject.sortBy;
   let order = "desc";
   if (paramObject.order !== undefined) order = paramObject.order;
-  let articleId;
-  if (paramObject.articleId !== undefined) articleId = paramObject.articleId;
-  let topic;
-  if (paramObject.topic !== undefined) topic = paramObject.topic;
+
+  const articleId = paramObject.articleId;
+  const topic = paramObject.topic;
 
   const queryValues = [];
   // greenlist for sortBy
@@ -37,7 +36,7 @@ exports.fetchArticles = async (paramObject) => {
 
   //queryString builder for db.query
   let queryString = `SELECT articles.article_id, users.username AS author, articles.created_at, title, topic, articles.votes, COUNT(comments.article_id) AS comment_count`;
-  //add body column if articleId exists
+
   if (articleId) {
     queryValues.push(articleId);
     queryString += `, articles.body`;
@@ -50,7 +49,8 @@ exports.fetchArticles = async (paramObject) => {
     queryValues.push(topic);
     queryString += ` WHERE topic = $1`;
   }
-  queryString += ` GROUP BY articles.article_id, users.username ORDER BY ${sortBy} ${order};`;
+  queryString += ` GROUP BY articles.article_id, users.username 
+  ORDER BY ${sortBy} ${order};`;
 
   const articles = await db.query(queryString, queryValues);
 
@@ -63,7 +63,35 @@ exports.fetchArticles = async (paramObject) => {
   //returns first item if using getArticleById
   if (articleId) return articles.rows[0];
   //for all other instances, return rows
-  return articles.rows;
+  //paginate rows first
+
+  let limit = 10;
+  if (paramObject.limit !== undefined) limit = Number(paramObject.limit);
+  let p = 1;
+  if (paramObject.p !== undefined) p = Number(paramObject.p);
+
+  //test for invalid values input
+  if (isNaN(p) || isNaN(limit)) {
+    return Promise.reject({
+      status: 400,
+      msg: `Invalid syntax input`,
+    });
+  }
+  const startIndex = (p - 1) * limit;
+  const endIndex = p * limit;
+  //test for page limit
+  if (startIndex > articles.rows.length) {
+    return Promise.reject({
+      status: 404,
+      msg: `Maximum Page(s) = ${Math.ceil(articles.rows.length / limit)}`,
+    });
+  }
+  //include total_count property
+  const paginatedArticles = {};
+  paginatedArticles.total_count = articles.rows.length;
+  paginatedArticles.articles = articles.rows.slice(startIndex, endIndex);
+
+  return paginatedArticles;
 };
 
 exports.createArticle = async (author, title, body, topic) => {

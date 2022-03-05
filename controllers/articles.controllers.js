@@ -7,9 +7,9 @@ const {
 
 exports.getArticles = async (req, res, next) => {
   try {
-    const { sort_by: sortBy, order, topic } = req.query;
-    const articles = await fetchArticles({ sortBy, order, topic });
-    res.status(200).send({ articles });
+    const { sort_by: sortBy, order, topic, limit, p } = req.query;
+    const articles = await fetchArticles({ sortBy, order, topic, limit, p });
+    res.status(200).send(articles);
   } catch (err) {
     next(err);
   }
