@@ -62,6 +62,14 @@ To seed the development tables, input the following in your command terminal:
 npm run seed
 ```
 
+To run the database server, input the following into your command terminal:
+
+```
+npm run start
+```
+
+Check that you have access to the database by performing a browser request to `http://localhost:9090/api` - if you see the API endpoints then you it works!
+
 ## Testing on the Database
 
 ---
