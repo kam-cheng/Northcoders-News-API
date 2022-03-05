@@ -70,9 +70,7 @@ exports.fetchArticles = async (paramObject) => {
   let p = 1;
   if (paramObject.p !== undefined) p = Number(paramObject.p);
 
-  console.log(limit);
-  console.log(p);
-
+  //test for invalid values input
   if (isNaN(p) || isNaN(limit)) {
     return Promise.reject({
       status: 400,
