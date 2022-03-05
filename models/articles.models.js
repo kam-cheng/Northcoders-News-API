@@ -79,10 +79,18 @@ exports.fetchArticles = async (paramObject) => {
   }
   const startIndex = (p - 1) * limit;
   const endIndex = p * limit;
+  //test for page limit
+  if (startIndex > articles.rows.length) {
+    return Promise.reject({
+      status: 404,
+      msg: `Maximum Page(s) = ${Math.ceil(articles.rows.length / limit)}`,
+    });
+  }
   //include total_count property
   const paginatedArticles = {};
   paginatedArticles.total_count = articles.rows.length;
   paginatedArticles.articles = articles.rows.slice(startIndex, endIndex);
+
   return paginatedArticles;
 };
 

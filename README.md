@@ -132,7 +132,7 @@ responds with a JSON object describing all the available endpoints.
 
 ### GET /api/articles
 
-- returns all articles inside an articles object, with the value being an array of objects including with the following properties:
+- returns the first 10 articles inside an articles object, with the value being an array of objects including with the following properties:
 
   - author
   - title
@@ -141,6 +141,8 @@ responds with a JSON object describing all the available endpoints.
   - created_at
   - votes
   - comment_count
+
+- also returns a total_count object, with the value being the total number articles in the database, factoring in any filters that may have been added to the query.
 
 - returned articles will by default be sorted by the created_at date, in descending order.
 
@@ -166,6 +168,11 @@ Accepts the following optional queries which can be used to narrow down or restr
 - topic: filters articles by the topic value specified in the query.
   - returns an empty array if the topic is valid but there are no related articles found.
   - 404 error if user inputs an invalid topic.
+- limit: (default of 10) declares number of articles to return.
+  - 400 error if user input is not a number
+- p: (default of 1) declares page number of articles to return.
+  - 400 error if user input is not a number
+  - 404 error if page requested exceeds number of available pages.
 
 **queries can be chained by including `&` in the search string.**
 

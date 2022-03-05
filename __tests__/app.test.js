@@ -317,6 +317,12 @@ describe("/articles", () => {
           .expect(400);
         expect(msg).toBe("Invalid syntax input");
       });
+      test("404 - error when page input returns no articles", async () => {
+        const {
+          body: { msg },
+        } = await request(app).get("/api/articles?limit=10&p=10").expect(404);
+        expect(msg).toBe("Maximum Page(s) = 2");
+      });
     });
   });
   describe("POST/api/articles", () => {
