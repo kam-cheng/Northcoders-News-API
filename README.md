@@ -132,7 +132,7 @@ responds with a JSON object describing all the available endpoints.
 
 ### GET /api/articles
 
-- returns the first 10 articles inside an articles object, with the value being an array of objects including with the following properties:
+- returns the first 10 articles inside the object's article property, with the value being an array of objects including with the following properties:
 
   - author
   - title
@@ -142,7 +142,7 @@ responds with a JSON object describing all the available endpoints.
   - votes
   - comment_count
 
-- also returns a total_count object, with the value being the total number articles in the database, factoring in any filters that may have been added to the query.
+- also contains a total_count property, with the value being the total number articles in the database, factoring in any filters that may have been added to the query.
 
 - returned articles will by default be sorted by the created_at date, in descending order.
 
