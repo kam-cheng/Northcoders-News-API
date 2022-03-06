@@ -2,26 +2,35 @@ const db = require("../db/connection.js");
 const { checkExists } = require("./utils/check-exists");
 const { paginateResults } = require("./utils/paginate.js");
 
-exports.fetchArticleIdComments = async ({ articleId, limit, p }) => {
+exports.fetchArticleIdComments = async (paramObject) => {
+  const { articleId } = paramObject;
+  let limit = 10;
+  if (paramObject.limit !== undefined) limit = paramObject.limit;
+  let p = 1;
+  if (paramObject.p !== undefined) p = paramObject.p;
+  p = (p - 1) * limit;
+
   const comments = await db.query(
-    `SELECT comment_id, votes, created_at, users.username AS author, body 
+    `SELECT comment_id, votes, created_at, users.username AS author, body
       FROM comments 
       JOIN users ON users.username = comments.author 
-      WHERE article_id = $1`,
-    [articleId]
+      WHERE article_id = $1 
+      LIMIT $2 OFFSET $3;`,
+    [articleId, limit, p]
   );
   //testing if articleId input matches an article
-  if (comments.rows.length === 0)
+  if (comments.rows.length === 0) {
     await checkExists("articles", "article_id", articleId);
+  }
+
+  if (p > comments.rows.length)
+    return Promise.reject({
+      status: 404,
+      msg: `Page request exceeds available pages`,
+    });
 
   //paginate results
-  const paginatedComments = paginateResults(
-    comments.rows,
-    "comments",
-    limit,
-    p
-  );
-  return paginatedComments;
+  return comments.rows;
 };
 
 exports.addComment = async (articleId, author, body) => {

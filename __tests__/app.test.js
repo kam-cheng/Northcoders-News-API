@@ -134,6 +134,7 @@ describe("/articles", () => {
               created_at: expect.any(String),
               votes: expect.any(Number),
               comment_count: expect.any(String),
+              total_count: expect.any(String),
             })
           );
         });
@@ -199,6 +200,7 @@ describe("/articles", () => {
           topic: "cats",
           votes: 0,
           comment_count: "2",
+          total_count: "1",
         });
       });
       test("200 - return empty array when topic is valid, but where there are no related articles", async () => {
@@ -242,6 +244,7 @@ describe("/articles", () => {
           topic: "mitch",
           votes: 0,
           comment_count: "1",
+          total_count: "11",
         });
       });
     });
@@ -274,6 +277,7 @@ describe("/articles", () => {
             topic: "mitch",
             votes: 0,
             comment_count: "0",
+            total_count: "12",
           },
           {
             article_id: 7,
@@ -283,22 +287,23 @@ describe("/articles", () => {
             topic: "mitch",
             votes: 0,
             comment_count: "0",
+            total_count: "12",
           },
         ]);
       });
       test("200 - new total_count property ignores list limit", async () => {
         const {
-          body: { total_count },
+          body: { articles },
         } = await request(app).get("/api/articles?limit=10&p=2").expect(200);
-        expect(total_count).toBe(12);
+        expect(articles[0].total_count).toBe("12");
       });
       test("200 - total_count property correctly calculates filtered articles", async () => {
         const {
-          body: { total_count },
+          body: { articles },
         } = await request(app)
           .get("/api/articles?limit=10&p=2&topic=mitch")
           .expect(200);
-        expect(total_count).toBe(11);
+        expect(articles[0].total_count).toBe("11");
       });
       test("400 - error when user input of limit is invalid", async () => {
         const {
@@ -320,7 +325,7 @@ describe("/articles", () => {
         const {
           body: { msg },
         } = await request(app).get("/api/articles?limit=10&p=10").expect(404);
-        expect(msg).toBe("Maximum Page(s) = 2");
+        expect(msg).toBe("Page request exceeds available pages");
       });
     });
   });
@@ -644,14 +649,6 @@ describe("/articles", () => {
           },
         ]);
       });
-      test("200 - new total_count property ignores list limit", async () => {
-        const {
-          body: { total_count },
-        } = await request(app)
-          .get("/api/articles/1/comments?limit=5&p=2")
-          .expect(200);
-        expect(total_count).toBe(11);
-      });
       test("400 - error when user input of limit is invalid", async () => {
         const {
           body: { msg },
@@ -668,13 +665,13 @@ describe("/articles", () => {
           .expect(400);
         expect(msg).toBe("Invalid syntax input");
       });
-      test("404 - error when page input returns no articles", async () => {
+      test("404 - error when page requested exceeds available comments", async () => {
         const {
           body: { msg },
         } = await request(app)
           .get("/api/articles/1/comments?limit=10&p=10")
           .expect(404);
-        expect(msg).toBe("Maximum Page(s) = 2");
+        expect(msg).toBe("Page request exceeds available pages");
       });
     });
   });

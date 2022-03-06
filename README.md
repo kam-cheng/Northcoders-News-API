@@ -132,7 +132,7 @@ responds with a JSON object describing all the available endpoints.
 
 ### GET /api/articles
 
-- returns the first 10 articles inside the object's article property, with the value being an array of objects including with the following properties:
+- returns the first 10 articles inside an articles object, with the value being an array of objects containing the following properties:
 
   - author
   - title
@@ -141,8 +141,7 @@ responds with a JSON object describing all the available endpoints.
   - created_at
   - votes
   - comment_count
-
-- also contains a total_count property, with the value being the total number of articles in the database, factoring in any filters that may have been added to the query.
+  - total_count (of articles factoring in any filters set)
 
 - returned articles will by default be sorted by the created_at date, in descending order.
 
@@ -246,8 +245,6 @@ Accepts the following optional queries which can be used to narrow down or restr
   - created_at
   - author
   - body
-
-- return object also contains a total_count property, with the value being the total number of comments in the database.
 
 - 200 returns an empty array if the article_id is valid but there are no comments.
 - 404 error if the article_id does not exist.

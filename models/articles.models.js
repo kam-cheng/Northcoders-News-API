@@ -7,11 +7,16 @@ exports.fetchArticles = async (paramObject) => {
   if (paramObject.sortBy !== undefined) sortBy = paramObject.sortBy;
   let order = "desc";
   if (paramObject.order !== undefined) order = paramObject.order;
+  let limit = 10;
+  if (paramObject.limit !== undefined) limit = paramObject.limit;
+  let p = 1;
+  if (paramObject.p !== undefined) p = paramObject.p;
+  p = (p - 1) * limit;
 
   const articleId = paramObject.articleId;
   const topic = paramObject.topic;
 
-  const queryValues = [];
+  const queryValues = [limit, p];
   // greenlist for sortBy
   if (
     ![
@@ -38,6 +43,8 @@ exports.fetchArticles = async (paramObject) => {
   //queryString builder for db.query
   let queryString = `SELECT articles.article_id, users.username AS author, articles.created_at, title, topic, articles.votes, COUNT(comments.article_id) AS comment_count`;
 
+  if (!articleId) queryString += `, count(*) OVER () AS total_count`;
+
   if (articleId) {
     queryValues.push(articleId);
     queryString += `, articles.body`;
@@ -45,33 +52,31 @@ exports.fetchArticles = async (paramObject) => {
   queryString += ` FROM articles 
     LEFT JOIN users ON articles.author = users.username 
     LEFT JOIN comments ON comments.article_id = articles.article_id`;
-  if (articleId) queryString += ` WHERE articles.article_id = $1`;
+  if (articleId) queryString += ` WHERE articles.article_id = $3`;
   if (topic) {
     queryValues.push(topic);
-    queryString += ` WHERE topic = $1`;
+    queryString += ` WHERE topic = $3`;
   }
   queryString += ` GROUP BY articles.article_id, users.username 
-  ORDER BY ${sortBy} ${order};`;
+  ORDER BY ${sortBy} ${order} LIMIT $1 OFFSET $2;`;
 
   const articles = await db.query(queryString, queryValues);
 
   //testing for 404 errors
   if (articles.rows.length === 0) {
     if (articleId) await checkExists("articles", "article_id", articleId);
-    if (topic) await checkExists("topics", "slug", topic);
+    else if (topic) await checkExists("topics", "slug", topic);
+    else
+      return Promise.reject({
+        status: 404,
+        msg: `Page request exceeds available pages`,
+      });
   }
 
   //returns first item if using getArticleById
   if (articleId) return articles.rows[0];
   //for all other instances, return rows
-  //paginate rows first
-  const paginatedArticles = paginateResults(
-    articles.rows,
-    "articles",
-    paramObject.limit,
-    paramObject.p
-  );
-  return paginatedArticles;
+  return articles.rows;
 };
 
 exports.createArticle = async (author, title, body, topic) => {
