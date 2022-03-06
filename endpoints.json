@@ -42,7 +42,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all or matching articles",
+    "description": "serves an array of matching articles",
     "queries": ["topic", "sort_by", "order", "limit", "p"],
     "defaultValues": {
       "sort_by": "created_at",
@@ -134,8 +134,12 @@
     "exampleResponse": {}
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves an array of all comments matching article_id",
-    "queries": [],
+    "description": "serves an array of comments matching article_id",
+    "queries": ["limit", "p"],
+    "defaultValues": {
+      "limit": 10,
+      "p": 1
+    },
     "exampleResponse": {
       "comments": [
         {
@@ -145,7 +149,8 @@
           "author": "Jim",
           "body": "this is my comment"
         }
-      ]
+      ],
+      "total_count": 12
     }
   },
   "DELETE /api/comments/:comment_id": {

@@ -1,7 +1,8 @@
 const db = require("../db/connection.js");
 const { checkExists } = require("./utils/check-exists");
+const { paginateResults } = require("./utils/paginate.js");
 
-exports.fetchArticleIdComments = async (articleId) => {
+exports.fetchArticleIdComments = async ({ articleId, limit, p }) => {
   const comments = await db.query(
     `SELECT comment_id, votes, created_at, users.username AS author, body 
       FROM comments 
@@ -12,7 +13,15 @@ exports.fetchArticleIdComments = async (articleId) => {
   //testing if articleId input matches an article
   if (comments.rows.length === 0)
     await checkExists("articles", "article_id", articleId);
-  return comments.rows;
+
+  //paginate results
+  const paginatedComments = paginateResults(
+    comments.rows,
+    "comments",
+    limit,
+    p
+  );
+  return paginatedComments;
 };
 
 exports.addComment = async (articleId, author, body) => {

@@ -142,7 +142,7 @@ responds with a JSON object describing all the available endpoints.
   - votes
   - comment_count
 
-- also contains a total_count property, with the value being the total number articles in the database, factoring in any filters that may have been added to the query.
+- also contains a total_count property, with the value being the total number of articles in the database, factoring in any filters that may have been added to the query.
 
 - returned articles will by default be sorted by the created_at date, in descending order.
 
@@ -239,7 +239,7 @@ Accepts the following optional queries which can be used to narrow down or restr
 
 ### GET /api/articles/:article_id/comments
 
-- Returns all comments matching the article_id inside of a comments object, with the value being an array of objects containing the following properties:
+- returns the first 10 comments inside the object's comments property, with the value being an array of objects including with the following properties:
 
   - comment_id
   - votes
@@ -247,9 +247,23 @@ Accepts the following optional queries which can be used to narrow down or restr
   - author
   - body
 
+- return object also contains a total_count property, with the value being the total number of comments in the database.
+
 - 200 returns an empty array if the article_id is valid but there are no comments.
 - 404 error if the article_id does not exist.
 - 400 error if the user input of article_id is invalid.
+
+### GET /api/articles/:article_id/comments? Optional Queries
+
+Accepts the following optional queries which can be used to modify the paginated return data:
+
+- limit: (default of 10) declares number of comments to return.
+  - 400 error if user input is not a number
+- p: (default of 1) declares page number of comments to return.
+  - 400 error if user input is not a number
+  - 404 error if page requested exceeds number of available pages.
+
+**queries can be chained by including `&` in the search string.**
 
 ### POST /api/articles/:article_id/comments
 
