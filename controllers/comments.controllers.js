@@ -17,9 +17,10 @@ exports.postComment = async (req, res, next) => {
 };
 exports.getArticleIdComments = async (req, res, next) => {
   const { article_id: articleId } = req.params;
+  const { limit, p } = req.query;
   try {
-    const comments = await fetchArticleIdComments(articleId);
-    res.status(200).send({ comments });
+    const comments = await fetchArticleIdComments({ articleId, limit, p });
+    res.status(200).send(comments);
   } catch (err) {
     next(err);
   }

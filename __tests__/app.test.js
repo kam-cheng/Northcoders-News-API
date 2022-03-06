@@ -552,51 +552,131 @@ describe("/articles", () => {
     });
   });
   describe("GET/api/articles/:article_id/comments", () => {
-    test("200 - returns 200 status and an array", async () => {
-      const {
-        body: { comments },
-      } = await request(app).get("/api/articles/1/comments").expect(200);
-      expect(Array.isArray(comments)).toBe(true);
-    });
-    test("200 - returns array of the correct length", async () => {
-      const {
-        body: { comments },
-      } = await request(app).get("/api/articles/1/comments").expect(200);
-      expect(comments).toHaveLength(11);
-    });
-    test("200 - each array object has the correct properties", async () => {
-      const {
-        body: { comments },
-      } = await request(app).get("/api/articles/1/comments").expect(200);
-      comments.forEach((comment) => {
-        expect(comment).toEqual(
-          expect.objectContaining({
-            comment_id: expect.any(Number),
-            votes: expect.any(Number),
-            created_at: expect.any(String),
-            author: expect.any(String),
-            body: expect.any(String),
-          })
-        );
+    describe("normal functionality", () => {
+      test("200 - returns 200 status and an array", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/1/comments").expect(200);
+        expect(Array.isArray(comments)).toBe(true);
+      });
+      test("200 - returns array of the correct length", async () => {
+        const {
+          body: { comments },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=20")
+          .expect(200);
+        expect(comments).toHaveLength(11);
+      });
+      test("200 - each array object has the correct properties", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/1/comments").expect(200);
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+            })
+          );
+        });
+      });
+      test("200 - returns empty array if article_id is valid but there are no comments", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/2/comments").expect(200);
+        expect(comments).toHaveLength(0);
+      });
+      test("404 - returns error when article_id doesn't exist", async () => {
+        const {
+          body: { msg },
+        } = await request(app).get("/api/articles/99/comments").expect(404);
+        expect(msg).toBe("user input 99 not found");
+      });
+      test("400 - returns error when article_id is invalid", async () => {
+        const {
+          body: { msg },
+        } = await request(app).get("/api/articles/grapes/comments").expect(400);
+        expect(msg).toBe("Invalid syntax input");
       });
     });
-    test("200 - returns empty array if article_id is valid but there are no comments", async () => {
-      const {
-        body: { comments },
-      } = await request(app).get("/api/articles/2/comments").expect(200);
-      expect(comments).toHaveLength(0);
-    });
-    test("404 - returns error when article_id doesn't exist", async () => {
-      const {
-        body: { msg },
-      } = await request(app).get("/api/articles/99/comments").expect(404);
-      expect(msg).toBe("user input 99 not found");
-    });
-    test("400 - returns error when article_id is invalid", async () => {
-      const {
-        body: { msg },
-      } = await request(app).get("/api/articles/grapes/comments").expect(400);
-      expect(msg).toBe("Invalid syntax input");
+    describe("optional query - paginated queries", () => {
+      test("200 - returns 200 Status", async () => {
+        await request(app)
+          .get("/api/articles/1/comments?limit=3&p=1")
+          .expect(200);
+      });
+      test("200 - default limit of 10 comments returned", async () => {
+        const {
+          body: { comments },
+        } = await request(app).get("/api/articles/1/comments").expect(200);
+        expect(comments).toHaveLength(10);
+      });
+      test("200 - limit of articles can be changed", async () => {
+        const {
+          body: { comments },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=5")
+          .expect(200);
+        expect(comments).toHaveLength(5);
+      });
+      test("200 - page can also be set", async () => {
+        const {
+          body: { comments },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=2&p=2")
+          .expect(200);
+        expect(comments).toEqual([
+          {
+            comment_id: 13,
+            votes: 0,
+            created_at: "2020-06-15T10:25:00.000Z",
+            author: "icellusedkars",
+            body: "Fruit pastilles",
+          },
+          {
+            comment_id: 12,
+            votes: 0,
+            created_at: "2020-03-02T07:10:00.000Z",
+            author: "icellusedkars",
+            body: "Massive intercranial brain haemorrhage",
+          },
+        ]);
+      });
+      test("200 - new total_count property ignores list limit", async () => {
+        const {
+          body: { total_count },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=5&p=2")
+          .expect(200);
+        expect(total_count).toBe(11);
+      });
+      test("400 - error when user input of limit is invalid", async () => {
+        const {
+          body: { msg },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=badrequest")
+          .expect(400);
+        expect(msg).toBe("Invalid syntax input");
+      });
+      test("400 - error when user input of page is invalid", async () => {
+        const {
+          body: { msg },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=10&p=badrequest")
+          .expect(400);
+        expect(msg).toBe("Invalid syntax input");
+      });
+      test("404 - error when page input returns no articles", async () => {
+        const {
+          body: { msg },
+        } = await request(app)
+          .get("/api/articles/1/comments?limit=10&p=10")
+          .expect(404);
+        expect(msg).toBe("Maximum Page(s) = 2");
+      });
     });
   });
 });
