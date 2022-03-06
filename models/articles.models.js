@@ -1,5 +1,6 @@
 const db = require("../db/connection.js");
 const { checkExists } = require("./utils/check-exists");
+const { paginateResults } = require("./utils/paginate.js");
 
 exports.fetchArticles = async (paramObject) => {
   let sortBy = "created_at";
@@ -64,33 +65,12 @@ exports.fetchArticles = async (paramObject) => {
   if (articleId) return articles.rows[0];
   //for all other instances, return rows
   //paginate rows first
-
-  let limit = 10;
-  if (paramObject.limit !== undefined) limit = Number(paramObject.limit);
-  let p = 1;
-  if (paramObject.p !== undefined) p = Number(paramObject.p);
-
-  //test for invalid values input
-  if (isNaN(p) || isNaN(limit)) {
-    return Promise.reject({
-      status: 400,
-      msg: `Invalid syntax input`,
-    });
-  }
-  const startIndex = (p - 1) * limit;
-  const endIndex = p * limit;
-  //test for page limit
-  if (startIndex > articles.rows.length) {
-    return Promise.reject({
-      status: 404,
-      msg: `Maximum Page(s) = ${Math.ceil(articles.rows.length / limit)}`,
-    });
-  }
-  //include total_count property
-  const paginatedArticles = {};
-  paginatedArticles.total_count = articles.rows.length;
-  paginatedArticles.articles = articles.rows.slice(startIndex, endIndex);
-
+  const paginatedArticles = paginateResults(
+    articles.rows,
+    "articles",
+    paramObject.limit,
+    paramObject.p
+  );
   return paginatedArticles;
 };
 

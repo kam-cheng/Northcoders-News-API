@@ -15,8 +15,13 @@ exports.fetchArticleIdComments = async ({ articleId, limit, p }) => {
     await checkExists("articles", "article_id", articleId);
 
   //paginate results
-  const results = paginateResults(comments.rows, "comments", limit, p);
-  return results;
+  const paginatedComments = paginateResults(
+    comments.rows,
+    "comments",
+    limit,
+    p
+  );
+  return paginatedComments;
 };
 
 exports.addComment = async (articleId, author, body) => {
