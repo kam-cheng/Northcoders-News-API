@@ -70,7 +70,6 @@ describe("/topics", () => {
     });
   });
 });
-
 describe("/users", () => {
   describe("GET/api/users", () => {
     test("200 - returns 200 Status and the correct number of users", async () => {
@@ -552,7 +551,7 @@ describe("/articles", () => {
     });
   });
   describe("GET/api/articles/:article_id/comments", () => {
-    describe("normal functionality", () => {
+    describe("default functionality", () => {
       test("200 - returns 200 status and an array", async () => {
         const {
           body: { comments },
@@ -614,7 +613,7 @@ describe("/articles", () => {
         } = await request(app).get("/api/articles/1/comments").expect(200);
         expect(comments).toHaveLength(10);
       });
-      test("200 - limit of articles can be changed", async () => {
+      test("200 - limit of comments can be changed", async () => {
         const {
           body: { comments },
         } = await request(app)
