@@ -20,7 +20,7 @@ exports.getArticleIdComments = async (req, res, next) => {
   const { limit, p } = req.query;
   try {
     const comments = await fetchArticleIdComments({ articleId, limit, p });
-    res.status(200).send(comments);
+    res.status(200).send({ comments });
   } catch (err) {
     next(err);
   }

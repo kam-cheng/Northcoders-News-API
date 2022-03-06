@@ -69,10 +69,10 @@
           "topic": "cooking",
           "created_at": 1527695953341,
           "votes": 123,
-          "comment_count": 2
+          "comment_count": 2,
+          "total_count": 12
         }
-      ],
-      "total_count": 12
+      ]
     }
   },
   "POST /api/articles": {
@@ -149,8 +149,7 @@
           "author": "Jim",
           "body": "this is my comment"
         }
-      ],
-      "total_count": 12
+      ]
     }
   },
   "DELETE /api/comments/:comment_id": {
