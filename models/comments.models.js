@@ -1,6 +1,5 @@
 const db = require("../db/connection.js");
 const { checkExists } = require("./utils/check-exists");
-const { paginateResults } = require("./utils/paginate.js");
 
 exports.fetchArticleIdComments = async (paramObject) => {
   const { articleId } = paramObject;

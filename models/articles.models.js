@@ -1,6 +1,5 @@
 const db = require("../db/connection.js");
 const { checkExists } = require("./utils/check-exists");
-const { paginateResults } = require("./utils/paginate.js");
 
 exports.fetchArticles = async (paramObject) => {
   let sortBy = "created_at";
