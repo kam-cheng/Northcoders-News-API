@@ -7,9 +7,9 @@ exports.fetchUsers = async () => {
 };
 
 exports.fetchUsername = async (username) => {
-  const user = await db.query(`SELECT * FROM users WHERE name = $1`, [
+  const user = await db.query(`SELECT * FROM users WHERE username = $1`, [
     username,
   ]);
-  if (user.rows.length === 0) await checkExists("users", "name", username);
+  if (user.rows.length === 0) await checkExists("users", "username", username);
   return user.rows[0];
 };

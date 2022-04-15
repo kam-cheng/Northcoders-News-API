@@ -89,13 +89,15 @@ describe("/users", () => {
   });
   describe("GET/api/users/:username", () => {
     test("200 - returns 200 status and object of the correct length", async () => {
-      const { body } = await request(app).get("/api/users/jonny").expect(200);
+      const { body } = await request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200);
       expect(Object.keys(body)).toHaveLength(1);
     });
     test("200 - user object has correct properties", async () => {
       const {
         body: { user },
-      } = await request(app).get("/api/users/jonny").expect(200);
+      } = await request(app).get("/api/users/butter_bridge").expect(200);
       expect(user).toEqual(
         expect.objectContaining({
           username: "butter_bridge",
